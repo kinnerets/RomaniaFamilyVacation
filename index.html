@@ -134,12 +134,14 @@
   .team-row .name .ranktitle{display:block; font-size:.66rem; font-weight:400; color:var(--muted); margin-top:1px;}
 
   /* ===== daily challenge ===== */
-  .welcome-video-card{text-align:center; background:none; border:none; box-shadow:none; padding:0;}
-  .welcome-video-card .section-title{justify-content:center;}
-  .welcome-video-card video{width:100%; background:#000;}
-  .welcome-video-card .welcome-video-embed{width:100%; aspect-ratio:9/16; background:#000; margin:0 auto; display:block; border:0;}
-  .welcome-video-card .intro-podcast-embed{width:100%; height:180px; border-radius:12px; box-shadow:var(--shadow); background:#000; display:block; border:0;}
-  .welcome-video-card .intro-podcast-audio{width:100%; accent-color:var(--amber); border-radius:22px; height:40px;}
+  .podcast-card{padding:12px 14px;}
+  .podcast-head{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .podcast-icon{flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--folkred); color:#fff; display:flex; align-items:center; justify-content:center;}
+  .podcast-icon svg{width:18px; height:18px;}
+  .podcast-title{font-size:.9rem; font-weight:800; color:var(--ink);}
+  .podcast-sub{font-size:.68rem; color:var(--muted); margin-top:1px;}
+  .podcast-card audio{width:100%; accent-color:var(--folkred); border-radius:22px; height:40px;}
+  .podcast-card video{width:100%; border-radius:10px; background:#000;}
   .daily-challenge-card{background:#fff; border:1px solid var(--line); box-shadow:var(--shadow); color:var(--ink); display:flex; align-items:center; gap:9px; padding:10px 12px; border-inline-start:4px solid var(--folkred);}
   .daily-challenge-card .dce{font-size:1.35rem; flex:0 0 auto; color:var(--folkred);}
   .daily-challenge-card .dct{flex:1; font-size:.74rem; line-height:1.3; color:var(--ink);}
@@ -202,9 +204,9 @@
   .exp-amount-row{display:flex; gap:8px;}
   .exp-amount-row .field{flex:1;}
   .exp-total-main{font-size:1.5rem; font-weight:900; color:var(--folkred); text-align:center; font-family:'Rubik',sans-serif;}
-  .exp-top-actions{display:flex; gap:8px; margin-bottom:10px;}
-  .exp-top-actions .btn-secondary{width:auto; white-space:nowrap; padding:10px 14px;}
+  .curr-conv-fullbtn{width:100%; margin-bottom:10px;}
   .curr-conv-panel{margin-bottom:10px;}
+  #expAddToggleBtn{margin-bottom:10px;}
   .curr-conv-row{display:flex; align-items:center; gap:8px;}
   .curr-conv-row .field{flex:1;}
   .curr-conv-eq{font-size:1rem; font-weight:700; color:var(--muted); flex:0 0 auto;}
@@ -373,10 +375,10 @@
 
   <!-- ===================== ROMANIA ===================== -->
   <section class="screen" id="screen-romania">
-  <div class="card welcome-video-card" id="introPodcastWrap"></div>
-
   <h2 class="section-title">מזג אוויר עכשיו</h2>
   <div class="card weather-block" id="weatherWrap"><div class="weather-loading">טוען תחזית...</div></div>
+
+  <div class="card podcast-card" id="introPodcastWrap"></div>
 
   <h2 class="section-title">רומניה בקטנה</h2>
   <div class="card culture-block" id="cultureWrap"></div>
@@ -431,10 +433,7 @@
 
   <!-- ===================== EXPENSES ===================== -->
   <section class="screen" id="screen-expenses">
-  <div class="exp-top-actions">
-  <button class="btn-primary" id="expAddToggleBtn" style="flex:1;">הוספת הוצאה</button>
-  <button class="btn-secondary" id="currConvToggleBtn" style="flex:0 0 auto;">המרת מטבע</button>
-  </div>
+  <button class="btn-secondary curr-conv-fullbtn" id="currConvToggleBtn">המרת מטבע</button>
   <div class="card curr-conv-panel" id="currConvPanel" style="display:none;">
   <div class="curr-conv-row">
   <input type="number" id="currConvInput" class="field" placeholder="סכום בלאו (RON)" style="margin-bottom:0;">
@@ -443,6 +442,11 @@
   </div>
   <div class="curr-conv-note">שער קבוע לצורך אומדן מהיר (1 RON ≈ 0.67 ₪) — לא שער בזמן אמת.</div>
   </div>
+
+  <div class="exp-sync-status" id="expSyncStatus"></div>
+  <div class="card" id="expenseSummary"></div>
+
+  <button class="btn-primary" id="expAddToggleBtn">הוספת הוצאה</button>
   <div class="card exp-add-form" id="expAddForm">
   <input type="date" id="expDate" class="field">
   <input type="text" id="expItem" class="field" placeholder="תיאור ההוצאה">
@@ -468,8 +472,6 @@
   <h2 class="section-title">יומן ההוצאות</h2>
   <button class="exp-edit-toggle" id="expEditToggle" title="עריכה/מחיקה"></button>
   </div>
-  <div class="exp-sync-status" id="expSyncStatus"></div>
-  <div class="card" id="expenseSummary"></div>
   <div id="expenseList"></div>
   </section>
 
@@ -1463,8 +1465,14 @@ function renderIntroPodcast(){
   const wrap = document.getElementById('introPodcastWrap');
   if(!wrap || !INTRO_PODCAST_URL) return;
   wrap.innerHTML = `
-  <h2 class="section-title">הפודקאסט של הטיול</h2>
-  <audio class="intro-podcast-audio" controls preload="metadata" src="${mediaUrl(INTRO_PODCAST_URL)}"></audio>
+  <div class="podcast-head">
+  <div class="podcast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13a9 9 0 0 1 18 0"/><path d="M21 13v5a2 2 0 0 1-2 2h-1v-7h3z"/><path d="M3 13v5a2 2 0 0 0 2 2h1v-7H3z"/></svg></div>
+  <div>
+  <div class="podcast-title">הפודקאסט של הטיול</div>
+  <div class="podcast-sub">כמה דקות רקע לפני שיוצאים</div>
+  </div>
+  </div>
+  <audio controls preload="metadata" src="${mediaUrl(INTRO_PODCAST_URL)}"></audio>
   `;
   attachMediaFallback(wrap.querySelector('audio'), INTRO_PODCAST_URL);
 }
