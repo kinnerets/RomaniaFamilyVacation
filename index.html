@@ -324,6 +324,7 @@
   .sheet-actions a, .sheet-actions button{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; text-decoration:none; cursor:pointer; flex:0 0 auto; padding:0;}
   .sheet-actions svg{width:16px; height:16px; display:block;}
   .sheet-actions a.gmaps{background:var(--night); color:#fff;}
+  .sheet-actions a.waze{background:var(--forest); color:#fff;}
   .sheet-actions a.official{background:var(--amber); color:var(--night-deep);}
   .sheet-actions button.video-link-btn{background:linear-gradient(135deg, var(--folkred) 0%, #c0392b 100%); color:#fff; box-shadow:0 3px 8px rgba(196,44,44,.35);}
   .sheet-actions button.video-link-btn svg{margin-inline-start:2px;}
@@ -400,36 +401,80 @@
   C180,415 120,405 90,365 C55,340 45,290 65,250
   C40,215 45,165 80,130 C70,90 100,55 150,40 C160,35 170,32 180,30 Z"
   fill="#CFE0C3" stroke="#B7CBA8" stroke-width="3"/>
-  <!-- decorative pine trees -->
+
+  <!-- soft clouds -->
+  <g fill="#fff" opacity=".55">
+  <ellipse cx="120" cy="60" rx="22" ry="9"/><ellipse cx="140" cy="55" rx="16" ry="8"/>
+  <ellipse cx="480" cy="70" rx="20" ry="8"/><ellipse cx="498" cy="66" rx="14" ry="7"/>
+  </g>
+
+  <!-- decorative pine trees, scattered -->
   <g fill="#6E9B6A" opacity=".8">
   <g transform="translate(230,90)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
   <g transform="translate(255,105) scale(.8)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
   <g transform="translate(320,190) scale(.9)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
   <g transform="translate(395,215) scale(.75)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
   <g transform="translate(150,240) scale(.85)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(110,190) scale(.7)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(430,260) scale(.8)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(200,320) scale(.75)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(440,150) scale(.7)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
   </g>
-  <!-- mountains (Carpathian arc) -->
+
+  <!-- mountains (Carpathian arc, wider) -->
   <g opacity=".85">
+  <polygon points="230,175 258,125 286,175" fill="#AEBBA4"/>
   <polygon points="255,150 285,95 315,150" fill="#A9B8A0"/>
   <polygon points="278,120 285,105 292,120" fill="#F3EEE2"/>
+  <polygon points="305,185 335,135 365,185" fill="#AEBBA4"/>
   <polygon points="330,175 360,120 390,175" fill="#9FAF96"/>
   <polygon points="352,145 360,130 368,145" fill="#F3EEE2"/>
+  <polygon points="385,200 410,158 435,200" fill="#AEBBA4"/>
   </g>
+
+  <!-- small lake near Balea -->
+  <g transform="translate(233,105)" opacity=".7">
+  <ellipse cx="0" cy="0" rx="16" ry="9" fill="#8FB9D8"/>
+  <path d="M-10,-1 q4,-4 8,0 q4,4 8,0" stroke="#fff" stroke-width="1.4" fill="none" opacity=".7"/>
+  </g>
+
+  <!-- small wooden church icon near ASTRA -->
+  <g transform="translate(200,175)" fill="#9C7A4E" opacity=".7">
+  <rect x="-8" y="-2" width="16" height="14"/>
+  <polygon points="0,-16 -10,-2 10,-2"/>
+  <rect x="-1.4" y="-22" width="2.8" height="7"/>
+  <rect x="-4" y="-19" width="8" height="2"/>
+  </g>
+
   <!-- castle icon near Bran -->
-  <g transform="translate(500,180)" fill="var(--folkred)" opacity=".55">
+  <g transform="translate(500,180)" fill="var(--folkred)" opacity=".6">
   <rect x="-18" y="-6" width="36" height="20"/>
   <rect x="-18" y="-14" width="7" height="8"/>
-  <rect x="-4" y="-14" width="8" height="8"/>
+  <rect x="-4" y="-16" width="8" height="10"/>
   <rect x="11" y="-14" width="7" height="8"/>
-  <polygon points="0,-30 -9,-14 9,-14"/>
+  <polygon points="0,-30 -9,-16 9,-16"/>
+  <rect x="-16" y="0" width="5" height="6" fill="#F3EEE2"/>
+  <rect x="11" y="0" width="5" height="6" fill="#F3EEE2"/>
   </g>
+
   <!-- bear icon near sanctuary -->
-  <g transform="translate(300,330)" fill="#8A5A3B" opacity=".55">
+  <g transform="translate(300,330)" fill="#8A5A3B" opacity=".6">
   <circle cx="-10" cy="-16" r="6"/>
   <circle cx="10" cy="-16" r="6"/>
+  <circle cx="-10" cy="-16" r="2.6" fill="#F3EEE2"/>
+  <circle cx="10" cy="-16" r="2.6" fill="#F3EEE2"/>
   <ellipse cx="0" cy="0" rx="20" ry="16"/>
+  <ellipse cx="0" cy="4" rx="8" ry="6" fill="#F3EEE2" opacity=".6"/>
+  <circle cx="-13" cy="14" r="5"/><circle cx="13" cy="14" r="5"/>
+  </g>
+
+  <!-- small airplane near airport -->
+  <g transform="translate(470,385) rotate(-30)" fill="var(--ink)" opacity=".55">
+  <polygon points="0,-14 4,4 0,1 -4,4"/>
+  <polygon points="-9,0 9,0 0,6"/>
   </g>
   </svg>
+
   <button class="route-pin" style="left:32%; top:26%;" data-place="sibiu"><span class="route-pin-dot"></span><span class="route-pin-label">סיביו</span></button>
   <button class="route-pin" style="left:37%; top:34%;" data-place="astra"><span class="route-pin-dot"></span><span class="route-pin-label">ASTRA</span></button>
   <button class="route-pin" style="left:44%; top:23%;" data-place="balea"><span class="route-pin-dot"></span><span class="route-pin-label">אגם בלאה</span></button>
@@ -1131,6 +1176,8 @@ let quizOrder = shuffle(QUIZ_BANK);
 
 const mapsUrl = (q)=>"https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
 const placeMapsLink = (p)=> p.mapsLink || mapsUrl(p.mapsQuery || p.name);
+const wazeUrl = (q)=>"https://waze.com/ul?q=" + encodeURIComponent(q) + "&navigate=yes";
+const placeWazeLink = (p)=> wazeUrl(p.mapsQuery || p.name);
 
 /* =========================================================
   HEADER + ROUTE
@@ -1231,6 +1278,7 @@ function renderShoppingPanel(listId){
   PLACE DETAIL SHEET (modal)
   ========================================================= */
 const PIN_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z"/><circle cx="12" cy="8.8" r="2.4"/></svg>`;
+const WAZE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 17-7.5-4.3-7.5 4.3z"/></svg>`;
 const CLOCK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>`;
 const ZOOM_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M10.5 8v5M8 10.5h5"/></svg>`;
 const PLAY_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>`;
@@ -1356,7 +1404,8 @@ function openPlaceSheet(placeId, shopId){
   <div class="sheet-header-plain">
   <span class="phtitle">${p.name}</span>
   <div class="sheet-actions">
-  <a class="gmaps" href="${placeMapsLink(p)}" target="_blank" rel="noopener" title="נווטו">${PIN_SVG}</a>
+  <a class="gmaps" href="${placeMapsLink(p)}" target="_blank" rel="noopener" title="נווטו בגוגל מפות">${PIN_SVG}</a>
+  <a class="waze" href="${placeWazeLink(p)}" target="_blank" rel="noopener" title="נווטו בוויז">${WAZE_SVG}</a>
   ${p.officialLink?`<a class="official" href="${p.officialLink}" target="_blank" rel="noopener" title="אתר רשמי">${GLOBE_SVG}</a>`:''}
   ${p.ticketsLink?`<a class="official" href="${p.ticketsLink}" target="_blank" rel="noopener" title="כרטיסים">${TICKET_SVG}</a>`:''}
   ${p.video?`<button class="video-link-btn" id="sheetVideoBtn" title="צפייה בסרט">${PLAY_SVG}</button>`:''}
@@ -1410,12 +1459,14 @@ function openEventSheet(dayId, idx){
   const day = TRIP.days.find(d=>d.id===dayId);
   const e = day.events[idx];
   const link = e.mapsQuery ? (e.mapsLink || mapsUrl(e.mapsQuery)) : null;
+  const wazeLink = e.mapsQuery ? wazeUrl(e.mapsQuery) : null;
   document.getElementById('sheetContent').innerHTML = `
   <button class="sheet-close" id="sheetCloseBtn">✕</button>
   <div class="sheet-header-plain">
   <span class="phtitle">${e.time} · ${day.weekday} ${day.date.split('/')[0]}/${day.date.split('/')[1]}</span>
   <div class="sheet-actions">
-  ${link?`<a class="gmaps" href="${link}" target="_blank" rel="noopener" title="נווטו">${PIN_SVG}</a>`:''}
+  ${link?`<a class="gmaps" href="${link}" target="_blank" rel="noopener" title="נווטו בגוגל מפות">${PIN_SVG}</a>`:''}
+  ${wazeLink?`<a class="waze" href="${wazeLink}" target="_blank" rel="noopener" title="נווטו בוויז">${WAZE_SVG}</a>`:''}
   ${e.video?`<button class="video-link-btn" id="eventVideoBtn" title="צפייה בסרט">${PLAY_SVG}</button>`:''}
   </div>
   </div>
@@ -2230,6 +2281,7 @@ function switchToScreen(screenName){
   document.querySelectorAll('.screen').forEach(s=> s.classList.remove('active'));
   document.getElementById('screen-'+screenName).classList.add('active');
   if(screenName==='games') showGamesMenu();
+  if(screenName==='romania' && window.__fitRouteMap) requestAnimationFrame(window.__fitRouteMap);
 }
 document.querySelectorAll('nav.tabs button').forEach(btn=>{
   btn.onclick = ()=> switchToScreen(btn.dataset.screen);
@@ -2262,50 +2314,82 @@ document.querySelectorAll('.route-pin').forEach(btn=>{
   }
   function fitToWrap(){
   const vw = wrap.clientWidth, vh = wrap.clientHeight;
+  if(!vw || !vh) return;
   baseScale = Math.max(vw/CW, vh/CH);
   scale = baseScale;
   tx = (vw - CW*scale)/2;
   ty = (vh - CH*scale)/2;
   applyTransform();
   }
+  window.__fitRouteMap = fitToWrap;
   requestAnimationFrame(fitToWrap);
   window.addEventListener('resize', fitToWrap);
 
   let touchState = null;
   let lastTapTime = 0;
-  wrap.addEventListener('touchstart', (e)=>{
-  if(e.touches.length === 1){
-  const now = Date.now();
-  if(now - lastTapTime < 300){ fitToWrap(); touchState = null; lastTapTime = 0; return; }
-  lastTapTime = now;
-  if(scale > baseScale * 1.03){
-  touchState = {mode:'pan', startX:e.touches[0].clientX, startY:e.touches[0].clientY, tx0:tx, ty0:ty};
+  let moved = false;
+
+  function midpoint(touches){
+  const rect = wrap.getBoundingClientRect();
+  return {
+  x: (touches[0].clientX + touches[1].clientX)/2 - rect.left,
+  y: (touches[0].clientY + touches[1].clientY)/2 - rect.top
+  };
   }
+  function localPoint(clientX, clientY){
+  const rect = wrap.getBoundingClientRect();
+  return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  wrap.addEventListener('touchstart', (e)=>{
+  moved = false;
+  if(e.touches.length === 1){
+  touchState = {mode:'pan', startX:e.touches[0].clientX, startY:e.touches[0].clientY, tx0:tx, ty0:ty};
   } else if(e.touches.length === 2){
   const dx = e.touches[0].clientX - e.touches[1].clientX;
   const dy = e.touches[0].clientY - e.touches[1].clientY;
-  touchState = {mode:'pinch', startDist:Math.hypot(dx,dy), scale0:scale, tx0:tx, ty0:ty};
+  const mid = midpoint(e.touches);
+  touchState = {
+  mode:'pinch', startDist:Math.hypot(dx,dy), scale0:scale,
+  anchorX:(mid.x - tx)/scale, anchorY:(mid.y - ty)/scale
+  };
   }
   }, {passive:true});
+
   wrap.addEventListener('touchmove', (e)=>{
   if(!touchState) return;
-  e.preventDefault();
   if(touchState.mode === 'pan' && e.touches.length === 1){
-  tx = touchState.tx0 + (e.touches[0].clientX - touchState.startX);
-  ty = touchState.ty0 + (e.touches[0].clientY - touchState.startY);
+  const dx = e.touches[0].clientX - touchState.startX;
+  const dy = e.touches[0].clientY - touchState.startY;
+  if(Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+  if(!moved) return;
+  e.preventDefault();
+  tx = touchState.tx0 + dx;
+  ty = touchState.ty0 + dy;
   clamp();
   applyTransform();
   } else if(touchState.mode === 'pinch' && e.touches.length === 2){
+  e.preventDefault();
+  moved = true;
   const dx = e.touches[0].clientX - e.touches[1].clientX;
   const dy = e.touches[0].clientY - e.touches[1].clientY;
   const dist = Math.hypot(dx,dy);
   const ratio = dist / touchState.startDist;
   scale = Math.min(Math.max(touchState.scale0 * ratio, baseScale), baseScale*5);
+  const mid = midpoint(e.touches);
+  tx = mid.x - touchState.anchorX * scale;
+  ty = mid.y - touchState.anchorY * scale;
   clamp();
   applyTransform();
   }
   }, {passive:false});
+
   wrap.addEventListener('touchend', (e)=>{
+  if(touchState && touchState.mode === 'pan' && !moved){
+  const now = Date.now();
+  if(now - lastTapTime < 350){ fitToWrap(); lastTapTime = 0; }
+  else { lastTapTime = now; }
+  }
   if(e.touches.length === 0) touchState = null;
   });
 })();
