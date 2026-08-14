@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>הרפתקה ברומניה</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -141,7 +141,12 @@
   .podcast-icon svg{width:18px; height:18px;}
   .podcast-title{font-size:.9rem; font-weight:800; color:var(--ink);}
   .podcast-sub{font-size:.68rem; color:var(--muted); margin-top:1px;}
-  .podcast-card audio{width:100%; accent-color:var(--folkred); border-radius:22px; height:40px;}
+  .podcast-card audio{width:100%; accent-color:var(--folkred); border-radius:22px; height:40px; overflow:hidden;}
+  .podcast-card audio::-webkit-media-controls-panel{background-color:var(--night);}
+  .podcast-card audio::-webkit-media-controls-play-button,
+  .podcast-card audio::-webkit-media-controls-current-time-display,
+  .podcast-card audio::-webkit-media-controls-time-remaining-display,
+  .podcast-card audio::-webkit-media-controls-mute-button{color:#fff; filter:invert(1) grayscale(1) brightness(1.7);}
   .podcast-card video{width:100%; border-radius:10px; background:#000;}
   .daily-challenge-card{background:#fff; border:1px solid var(--line); box-shadow:var(--shadow); color:var(--ink); display:flex; align-items:center; gap:9px; padding:10px 12px; border-inline-start:4px solid var(--folkred);}
   .daily-challenge-card .dce{font-size:1.35rem; flex:0 0 auto; color:var(--folkred);}
@@ -336,9 +341,32 @@
   .alt-stay-foot{display:flex; justify-content:space-between; align-items:center; margin-top:6px;}
   .alt-stay-price{color:var(--folkred); font-weight:800; font-size:.85rem;}
   .alt-stay-booklink{font-size:.68rem; color:var(--muted); text-decoration:underline;}
+  .alt-stay-note{font-size:.68rem; color:var(--muted); margin-top:2px;}
   .sheet-body .tickets{background:var(--sage,oklch(94% 0.03 185)); border-radius:10px; padding:10px 12px; font-size:.8rem; margin-bottom:14px;}
-  .podcast-box{background:var(--night); border-radius:12px; padding:12px; margin-bottom:14px;}
-  .podcast-play{display:flex; align-items:center; gap:7px; background:var(--amber); color:var(--night-deep); border:none; border-radius:20px; padding:8px 14px; font-size:.78rem; font-weight:700; cursor:pointer; margin-bottom:8px; font-family:'Rubik',sans-serif;}
+  .hours-chip{display:flex; align-items:center; gap:6px; font-size:.74rem; color:var(--muted); margin-bottom:12px;}
+  .hours-chip svg{width:14px; height:14px; flex:0 0 auto; color:var(--folkred);}
+  .route-map-wrap{position:relative; width:100%; aspect-ratio:600/440; background:var(--night); border-radius:16px; overflow:hidden; margin-bottom:8px; box-shadow:var(--shadow); touch-action:manipulation; cursor:pointer;}
+  .route-map-bg{position:absolute; inset:0; width:100%; height:100%; touch-action:manipulation;}
+  .route-pin{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; cursor:pointer; padding:6px; touch-action:manipulation;}
+  .route-pin-dot{width:10px; height:10px; border-radius:50%; background:var(--folkred); border:2px solid #fff; box-shadow:0 0 0 2.5px oklch(62% 0.19 30 / .35); flex:0 0 auto;}
+  .route-pin-label{font-size:.56rem; font-weight:700; color:#fff; background:rgba(0,0,0,.55); padding:2px 5px; border-radius:5px; white-space:nowrap; line-height:1.3;}
+  .route-map-expand-hint{position:absolute; left:8px; bottom:8px; width:26px; height:26px; border-radius:50%; background:rgba(0,0,0,.45); color:#fff; display:flex; align-items:center; justify-content:center; pointer-events:none;}
+  .route-map-expand-hint svg{width:14px; height:14px;}
+
+  .map-fs-backdrop{position:fixed; inset:0; background:var(--night-deep); z-index:200; display:none; flex-direction:column;}
+  .map-fs-backdrop.open{display:flex;}
+  .map-fs-close{position:absolute; top:16px; left:16px; z-index:5; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); color:#fff; border:none; font-size:1.1rem; cursor:pointer;}
+  .map-fs-zoom-controls{position:absolute; bottom:20px; left:16px; z-index:5; display:flex; flex-direction:column; gap:8px;}
+  .map-fs-zoom-controls button{width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,.15); color:#fff; border:none; font-size:1.2rem; cursor:pointer; font-family:'Rubik',sans-serif;}
+  .map-fs-viewport{flex:1; overflow:hidden; touch-action:none; position:relative;}
+  .map-fs-canvas{position:absolute; top:0; left:0; width:600px; height:440px; transform-origin:0 0; will-change:transform;}
+  .map-fs-canvas .route-map-bg{position:absolute; inset:0; width:100%; height:100%;}
+  .map-fs-canvas .route-pin-label{font-size:.85rem; padding:4px 8px;}
+  .map-fs-canvas .route-pin-dot{width:16px; height:16px;}
+  .map-fs-canvas .route-map-expand-hint{display:none;}
+  .route-map-note{font-size:.66rem; color:var(--muted); margin-bottom:14px; line-height:1.5;}
+  .podcast-box{background:none; border:1px solid var(--line); border-radius:12px; padding:8px; margin-bottom:14px;}
+  .podcast-play{display:flex; align-items:center; gap:7px; background:var(--folkred); color:#fff; border:none; border-radius:20px; padding:8px 14px; font-size:.78rem; font-weight:700; cursor:pointer; margin-bottom:0; font-family:'Rubik',sans-serif;}
   .podcast-play svg{width:15px; height:15px;}
   .podcast-play.playing{background:var(--folkred); color:#fff;}
   .podcast-text{color:var(--cream); font-size:.76rem; line-height:1.6; opacity:.85; margin:0;}
@@ -372,6 +400,34 @@
   <div class="card weather-block" id="weatherWrap"><div class="weather-loading">טוען תחזית...</div></div>
 
   <div class="card podcast-card" id="introPodcastWrap"></div>
+
+  <h2 class="section-title">המסלול שלנו</h2>
+  <div class="route-map-wrap" id="routeMapWrap">
+  <svg class="route-map-bg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <path d="M180,30 C260,15 340,25 400,55 C460,80 520,90 555,140
+  C580,175 575,220 545,245 C560,275 555,315 520,335
+  C500,375 460,405 410,415 C350,430 280,425 230,400
+  C180,415 120,405 90,365 C55,340 45,290 65,250
+  C40,215 45,165 80,130 C70,90 100,55 150,40 C160,35 170,32 180,30 Z"
+  fill="#fff" opacity=".045" stroke="#fff" stroke-opacity=".1" stroke-width="2"/>
+  <text x="300" y="235" text-anchor="middle" fill="#fff" opacity=".08" font-size="34" font-weight="800" font-family="Rubik, sans-serif">ROMANIA</text>
+  </svg>
+  <button class="route-pin" style="left:32%; top:26%;" data-place="sibiu"><span class="route-pin-dot"></span><span class="route-pin-label">סיביו</span></button>
+  <button class="route-pin" style="left:37%; top:34%;" data-place="astra"><span class="route-pin-dot"></span><span class="route-pin-label">ASTRA</span></button>
+  <button class="route-pin" style="left:44%; top:23%;" data-place="balea"><span class="route-pin-dot"></span><span class="route-pin-label">אגם בלאה</span></button>
+  <button class="route-pin" style="left:40%; top:44%;" data-place="avrig"><span class="route-pin-dot"></span><span class="route-pin-label">עמק אבריג</span></button>
+  <button class="route-pin" style="left:46%; top:40%;" data-place="clay"><span class="route-pin-dot"></span><span class="route-pin-label">טירת החמר</span></button>
+  <button class="route-pin" style="left:37%; top:54%;" data-place="brambura"><span class="route-pin-dot"></span><span class="route-pin-label">Brambura</span></button>
+  <button class="route-pin" style="left:56%; top:52%;" data-place="bran"><span class="route-pin-dot"></span><span class="route-pin-label">בראן</span></button>
+  <button class="route-pin" style="left:63%; top:44%;" data-place="dino"><span class="route-pin-dot"></span><span class="route-pin-label">Dino Parc</span></button>
+  <button class="route-pin" style="left:68%; top:36%;" data-place="brasov"><span class="route-pin-dot"></span><span class="route-pin-label">בראשוב</span></button>
+  <button class="route-pin" style="left:66%; top:50%;" data-place="poianaBrasov"><span class="route-pin-dot"></span><span class="route-pin-label">פויאנה בראשוב</span></button>
+  <button class="route-pin" style="left:54%; top:64%;" data-place="bearSanctuary"><span class="route-pin-dot"></span><span class="route-pin-label">שמורת הדובים</span></button>
+  <button class="route-pin" style="left:68%; top:66%;" data-place="peles"><span class="route-pin-dot"></span><span class="route-pin-label">סינאיה</span></button>
+  <button class="route-pin" style="left:78%; top:86%;" data-place="airport"><span class="route-pin-dot"></span><span class="route-pin-label">שדה התעופה</span></button>
+  <button class="route-pin" style="left:70%; top:94%;" data-place="cismigiuHotel"><span class="route-pin-dot"></span><span class="route-pin-label">בוקרשט</span></button>
+  <div class="route-map-expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg></div>
+  </div>
 
   <h2 class="section-title">רומניה בקטנה</h2>
   <div class="card culture-block" id="cultureWrap"></div>
@@ -426,15 +482,12 @@
 
   <!-- ===================== EXPENSES ===================== -->
   <section class="screen" id="screen-expenses">
-  <button class="curr-conv-trigger" id="currConvToggleBtn"><span id="currConvToggleLabel">פתיחת ממיר מטבע</span> <span class="curr-conv-chevron">⌄</span></button>
-  <div class="card curr-conv-panel" id="currConvPanel" style="display:none;">
-  <h2 class="section-title">המרת מטבע</h2>
+  <div class="card curr-conv-panel" id="currConvPanel">
   <div class="curr-conv-row">
   <input type="number" id="currConvInput" class="field" placeholder="סכום בלאו (RON)" style="margin-bottom:0;">
   <span class="curr-conv-eq">=</span>
   <div class="curr-conv-result" id="currConvResult">0 ₪</div>
   </div>
-  <div class="curr-conv-note">שער קבוע לצורך אומדן מהיר (1 RON ≈ 0.67 ₪) — לא שער בזמן אמת.</div>
   </div>
 
   <div class="exp-sync-status" id="expSyncStatus"></div>
@@ -484,6 +537,19 @@
   <button class="lightbox-nav-btn prev" id="lightboxPrev">‹</button>
   <img id="lightboxImg" src="" alt="">
   <button class="lightbox-nav-btn next" id="lightboxNext">›</button>
+</div>
+
+<!-- fullscreen zoomable route map -->
+<div class="map-fs-backdrop" id="mapFsBackdrop">
+  <button class="map-fs-close" id="mapFsCloseBtn">✕</button>
+  <div class="map-fs-zoom-controls">
+  <button id="mapFsZoomIn">+</button>
+  <button id="mapFsZoomOut">−</button>
+  <button id="mapFsReset">↺</button>
+  </div>
+  <div class="map-fs-viewport" id="mapFsViewport">
+  <div class="map-fs-canvas" id="mapFsCanvas"></div>
+  </div>
 </div>
 
 <!-- fullscreen video (tap a video-chip in the itinerary) -->
@@ -620,6 +686,7 @@ const PLACES = {
   practical:"מבצר מהמאה ה-14 העומד על צוק, עם נוף מרהיב על הרי הקרפטים. מזוהה בתרבות הפופולרית עם אגדת דרקולה, בזכות דמיון (רופף מבחינה היסטורית) לוולד המשולש.",
   podcastScript:"אנחנו מתקרבים לטירה הכי מפורסמת בכל רומניה — טירת בראן. היא עומדת גבוה על צוק סלעי, עם צריחים חדים ומדרגות אבן שמתפתלות בין הקומות. הטירה נבנתה לפני יותר מ-600 שנה, בתקופה שבה עדיין לא היו מכוניות, חשמל, או אפילו נייר זכוכית לחלונות. בהמשך, סופר בשם בראם סטוקר כתב סיפור מפחיד על ערפד בשם דרקולה, וכשתיארו את הטירה שלו — אנשים חשבו מיד על בראן, כי היא נראית בדיוק כמו טירת אגדות אפלה. חשוב לדעת סוד קטן: אין שום הוכחה שדרקולה האמיתי בכלל ביקר כאן! זה סתם דמיון בין השמות. אבל זה לא מפריע — כי בפנים יש חדרים סודיים, מעברים נסתרים, ונוף עוצר נשימה על ההרים מסביב. תחפשו את המדרגה הכי צרה בטירה!",
   tip:"באוגוסט יש תורים ארוכים — כדאי להגיע מוקדם בבוקר.",
+  hours:"בדרך כלל 09:00–19:00 באוגוסט (משתנה בעונות — לוודא מראש)",
   ticketsInfo:"מומלץ לקנות כרטיסים מראש באתר הרשמי בעונת השיא.",
   mapsQuery:"Bran Castle Romania",
   wikiTitle:"Bran Castle",
@@ -694,6 +761,7 @@ const PLACES = {
   practical:"שמורה בזרנשטי, כ-20 דקות נסיעה מבראן. הביקור הוא בסיור מודרך בלבד ובשעות קבועות — חובה להזמין מקום מראש דרך האתר. הסיור נמשך כשעה ורבע והוא רגלי, בשבילי יער.",
   podcastScript:"בתוך יער אלונים ברומניה יש מקום שנקרא ליברטי — שמורת הדובים. הסיפור שלה מתחיל מדובה אחת שחיה שנים בכלוב קטן ליד מסעדה, כאטרקציה לתיירים. אישה בשם קריסטינה ראתה אותה, ולא הצליחה לשכוח. היא החליטה לעשות משהו. היום, השמורה הזאת היא בית לעשרות דובים חומים שכולם ניצלו ממקומות כאלה. לכל דוב יש שם, ולכל אחד יש סיפור. יש דובים שלא ידעו לשחות כשהגיעו, כי מעולם לא ראו מים עמוקים. יש כאלה שלקח להם חודשים להבין שאפשר פשוט ללכת, בלי קירות. כשמטיילים בשבילים של השמורה ורואים דוב מתפלש בבוץ או מטפס על עץ, קשה להאמין שפעם הוא לא יכול היה לזוז יותר משני צעדים. זה לא גן חיות — זה בית.",
   tip:"חובה להזמין מראש באתר, יש שעות סיור קבועות. מומלץ נעליים סגורות.",
+  hours:"בקיץ בד\"כ יציאות סיור ב-09:15, 09:45, 10:45 ו-11:10 (שלישי-חמישי וסופ\"ש) — לוודא ולהזמין מראש את השעה המדויקת באתר הרשמי",
   officialLink:"https://ampbears.ro/",
   mapsQuery:"Libearty Bear Sanctuary Zarnesti",
   gallery:["image075_f79542be59.webp","image076_8952edb5a9.jpg","image077_d025039435.jpg","image078_b1ee74e238.jpg"]
@@ -711,8 +779,9 @@ const PLACES = {
   },
   prejmerKarting:{
   name:"Prejmer Raceway", emoji:"",
-  practical:"מסלול קארטינג חיצוני ליד פריימר, כ-25 דקות מבראן. מתאים לילדים גדולים יותר (יש בדרך כלל דרישת גובה/גיל למכוניות המהירות יותר — כדאי לבדוק מראש באתר).",
-  tip:"אפשר לשלב באותה יציאה עם הביקור במבצר הכנסייה הסמוך.",
+  practical:"קארטינג מקצועי באוויר הפתוח — המסלול הגדול באזור, כ-20 דקות מבראשוב. גילאי 4-7: קארטינג זוגי עם הורה. גילאי 7+: נהיגה עצמאית. זמן מומלץ באתר: 1-2 שעות.",
+  hours:"א'-ה' 10:00–21:00 · ו'-ש' 10:00–22:00",
+  tip:"80–120 RON למקצה.",
   mapsQuery:"Prejmer Raceway"
   },
   sergiana:{
@@ -734,6 +803,7 @@ const PLACES = {
   practical:"בסגנון ניאו-רנסאנס גרמני, נחשב לאחד הארמונות המרשימים באירופה, עם אוסף אמנות של יותר מ-35,000 יצירות. הסיור בפנים מרשים, וגם הגנים החיצוניים מרהיבים.",
   podcastScript:"לפני יותר ממאה וחמישים שנה, מלך רומניה הראשון, קרול הראשון, החליט לבנות לעצמו ארמון קיץ בין ההרים. הוא הביא אדריכלים מכל אירופה, ועבד על הארמון הזה במשך כמעט ארבעים שנה, עד שהוא הפך לאחד הארמונות המרהיבים בעולם — עם מאה ושישים חדרים! תוך כדי הסיור תראו אולם שלם עם שריונים וחרבות אמיתיים, תקרות מצוירות ביד, ואפילו תיאטרון פרטי קטן בתוך הארמון. דבר מדהים נוסף: הארמון הזה היה אחד הראשונים באירופה שהיה בו חשמל, מעלית, ואפילו שאיבת אבק מרכזית — הכל עוד לפני שהמצאות כאלה היו נפוצות בכלל. אז כשתסתובבו בין החדרים המוזהבים, תחשבו: איזה חדר הייתם בוחרים להיות החדר שלכם, אם הייתם חיים כאן?",
   tip:"חובה כרטיסים מראש — כניסה מוגבלת ל-2,000 מבקרים ביום.",
+  hours:"סגור בשני ושלישי · רביעי 10:00–17:00 · חמישי-ראשון 09:15–17:00 (כניסה אחרונה חצי שעה לפני הסגירה)",
   ticketsInfo:"כניסה בחלונות שעה קבועים, יש לרכוש מראש ל-11 איש.",
   mapsQuery:"Peles Castle Sinaia",
   wikiTitle:"Peleș Castle",
@@ -796,10 +866,10 @@ const TRIP = {
   {time:"04:30", txt:"יציאה צפונה לעמק אבריג (כ-3.5 שעות דרך ערוץ נהר האולט).", placeId:"avrig"},
   {time:"07:30", txt:"עצירת התרעננות בתחנת דלק (קפה, שוקו, מאפים)."},
   {time:"08:30", txt:"הגעה לעמק אבריג, מנוחה ליד נחל אבריג.", placeId:"avrig"},
-  {time:"10:00", txt:"ביקור ב-Brambura Park — פארק הבית ההפוך.", placeId:"brambura"},
-  {time:"13:30", txt:"קניות ב-Lidl Avrig.", placeId:"lidl", shoppingListId:"lidlRasnov"},
-  {time:"14:00", txt:"צ'ק-אין ב-Arboreal Retreat.", placeId:"arboreal"},
-  {time:"ערב", txt:"ארוחת ערב רגועה בבקתה.", placeId:"arboreal"}
+  {time:"10:00", txt:"ביקור ב-Brambura Park — פארק הבית ההפוך (כ-10 דקות מהאזור בו נחים ליד נחל אבריג).", placeId:"brambura"},
+  {time:"13:30", txt:"קניות ב-Lidl Avrig (כ-15 דקות מברמבורה).", placeId:"lidl", shoppingListId:"lidlRasnov"},
+  {time:"14:00", txt:"צ'ק-אין ב-Arboreal Retreat (כ-10 דקות מה-Lidl).", placeId:"arboreal"},
+  {time:"ערב", txt:"ארוחת ערב עצמאית בבקתה — כדאי לקנות מראש ב-Lidl Avrig (13:30).", note:"אין צורך להזמין שולחן בשום מקום", placeId:"arboreal"}
   ]
   },
   {
@@ -808,10 +878,11 @@ const TRIP = {
   theme:[{icon:"",label:"טרנספגרשן"},{icon:"",label:"דיג באלבוטה"},{icon:"",label:"ASTRA וסיביו"}],
   stay:{name:"Arboreal Retreat (Porumbacu Treehouse)", booked:true, mapsQuery:"Arboreal Retreat Porumbacu de Sus", placeId:"arboreal"},
   events:[
-  {time:"08:30", txt:"נסיעה במעלה כביש הטרנספגרשן המפורסם, עצירה באגם בלאה (Bâlea Lake) לתצפית, מזכרות ואוויר הרים. בירידה צפונה (באותו אזור, בלי סטייה משמעותית) — עצירה קצרה נוספת במפל בליה (Cascada Bâlea).", placeId:"balea"},
-  {time:"13:30", txt:"ארוחת צהריים ב-Albota Trout Farm.", note:"מאושר שולחן ל-11 איש", placeId:"albota"},
-  {time:"15:30", txt:"סיור רגלי במוזיאון הפתוח ASTRA Museum ליד סיביו.", placeId:"astra"},
-  {time:"18:00", txt:"טיול ערב בכיכר העיר העתיקה בסיביו (Piața Mare) וחזרה ללינה בפורומבאקו.", placeId:"sibiu"}
+  {time:"09:30", txt:"יציאה מהבקתה — כ-10 דקות בלבד עד תחילת כביש הטרנספגרשן, ומשם עוד כשעה נסיעה בעלייה עד אגם בלאה (Bâlea Lake), עם עצירה בדרך לתצפית, מזכרות ואוויר הרים. בירידה צפונה (באותו אזור, בלי סטייה משמעותית) — עצירה קצרה נוספת במפל בליה (Cascada Bâlea).", placeId:"balea"},
+  {time:"13:30", txt:"ארוחת צהריים ב-Albota Trout Farm (כ-40 דקות ירידה מאגם בלאה).", note:"מאושר שולחן ל-11 איש", placeId:"albota"},
+  {time:"15:30", txt:"סיור רגלי במוזיאון הפתוח ASTRA Museum ליד סיביו (כ-30 דקות מאלבוטה).", placeId:"astra"},
+  {time:"18:00", txt:"טיול ערב בכיכר העיר העתיקה בסיביו (Piața Mare) — כ-15 דקות נסיעה מ-ASTRA.", placeId:"sibiu"},
+  {time:"19:30", txt:"ארוחת ערב בסיביו — כמה אופציות.", optional:true, detail:"<div class='alt-stay-list'><div class='alt-stay-opt'><div class='alt-stay-head'><span>Twenty Pizza</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Twenty%20Pizza%20Sibiu' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>פיצה מהתנור · אווירה קלילה, מנות גדולות ומחירים סבירים · הכי בטוח לילדים</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>La Turn</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=La%20Turn%20Sibiu' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>ממש בכיכר הגדולה (Piața Mare) · מטבח מודרני/בינלאומי עם נגיעה רומנית · תפריט מגוון לכל הגילאים</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>Benjamin Steakhouse & Bar</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Benjamin%20Steakhouse%20Sibiu' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>סטייקים והמבורגרים, מנות ילדים · אווירה חמימה, כ-2 דקות מהכיכר הגדולה</div></div></div><div class='alt-stay-note'>מומלץ להזמין שולחן מראש לקבוצה של 11.</div>"}
   ]
   },
   {
@@ -820,9 +891,9 @@ const TRIP = {
   theme:[{icon:"",label:"טירת החמר"},{icon:"",label:"קניות ל-Râșnov"},{icon:"",label:"צ'ק-אין בבראן"}],
   stay:{name:"The Lodge Transylvania (בראן)", booked:true, mapsQuery:"The Lodge Transylvania Bran", mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9", placeId:"lodge"},
   events:[
-  {time:"09:30", txt:"ארוחת בוקר, צ'ק-אאוט וביקור ב-Castelul de Lut (טירת החמר/הפיות).", placeId:"clay"},
+  {time:"09:30", txt:"ארוחת בוקר, צ'ק-אאוט וביקור ב-Castelul de Lut (טירת החמר/הפיות) — ממש בפורומבאקו דה סוס, כמה דקות מהבקתה.", placeId:"clay"},
   {time:"11:00", txt:"נסיעה מזרחה לבראן (כ-1.5 שעות) + עצירת קניות גדולה ב-Lidl Râșnov (בשרים וציוד לווילה).", placeId:"lidl", shoppingListId:"lidlRasnov"},
-  {time:"14:00", txt:"צ'ק-אין ב-The Lodge Transylvania.", placeId:"lodge"},
+  {time:"14:00", txt:"צ'ק-אין ב-The Lodge Transylvania (כ-10 דקות מה-Lidl).", placeId:"lodge"},
   {time:"אחה\"צ/ערב", txt:"מנוחה ורחצה בבריכה/ג'קוזי של הווילה, וערב ברבקיו משפחתי בחצר."}
   ]
   },
@@ -832,25 +903,24 @@ const TRIP = {
   theme:[{icon:"",label:"Dino Parc"},{icon:"",label:"בראשוב העתיקה"},{icon:"",label:"ערב ב-Sergiana"}],
   stay:{name:"The Lodge Transylvania", booked:true, mapsQuery:"The Lodge Transylvania Bran", mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9", placeId:"lodge"},
   events:[
-  {time:"בוקר", txt:"ביקור ב-Dino Parc Râșnov — פארק דינוזאורים ביער.", placeId:"dino"},
-  {time:"צהריים", txt:"פארק החבלים Parc Aventura או מדרחוב בראשוב.", placeId:"brasov"},
-  {time:"18:30", txt:"ארוחת ערב במסעדת Sergiana בבראשוב העתיקה (סניף Mureșenilor).", note:"מאושר שולחן ל-11 איש", placeId:"sergiana"},
+  {time:"בוקר", txt:"נסיעה קצרה מהווילה בבראן ל-Dino Parc Râșnov (כ-10 דקות) — פארק דינוזאורים ביער, שכולל גם מסלול הרפתקה בין הצמרות וזיפ-ליין בתוך הפארק עצמו. מומלץ להקדיש כ-2.5-3 שעות — זה כבר מכסה גם את חוויית ה'פארק חבלים' בלי צורך לנסוע למקום נוסף.", placeId:"dino"},
+  {time:"צהריים", txt:"מדרחוב בראשוב העתיקה (כ-15 דקות נסיעה מריישנוב).", placeId:"brasov"},
+  {time:"18:30", txt:"ארוחת ערב במסעדת Sergiana בבראשוב העתיקה (סניף Mureșenilor) — בהליכה מהמדרחוב.", note:"מאושר שולחן ל-11 איש", placeId:"sergiana"},
   {time:"אופציונלי", txt:"ערב פנוי אחרי הארוחה — אפשר להאריך את הטיול ברחוב רפובליצ'י בבראשוב, או לחזור למנוחה בווילה.", optional:true, placeId:"lodge"}
   ]
   },
   {
   id:"d5", date:"19/8/2026", weekday:"רביעי",
-  title:"יום הילוך נמוך: טירת בראן ופויאנה בראשוב",
-  theme:[{icon:"",label:"טירת בראן"},{icon:"",label:"רכבל פויאנה"},{icon:"",label:"אופציה: דובים"}],
+  title:"יום הילוך נמוך: דובים, טירת בראן ופויאנה בראשוב",
+  theme:[{icon:"",label:"שמורת הדובים"},{icon:"",label:"טירת בראן"},{icon:"",label:"רכבל פויאנה"}],
   stay:{name:"The Lodge Transylvania", booked:true, mapsQuery:"The Lodge Transylvania Bran", mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9", placeId:"lodge"},
   events:[
-  {time:"בוקר", txt:"תצפית וסיבוב רגוע ליד טירת בראן.", placeId:"bran"},
-  {time:"צהריים", txt:"עלייה ברכבל לפסגת פויאנה בראשוב, וארוחת צהריים קלה מול הנוף.", placeId:"poianaBrasov"},
-  {time:"אחה\"צ/ערב", txt:"חזרה מוקדמת לווילה בבראן, בילוי בבריכה/ג'קוזי, וערב פרידה רגוע מההרים לפני שממשיכים לכיוון בוקרשט."},
-  {time:"אופציונלי", txt:"שמורת הדובים Libearty בזרנשטי — כ-20 דקות מבראן. סיור מודרך של כשעה ורבע בין עשרות דובים חומים שניצלו משבי. חובה להזמין מראש.", optional:true, placeId:"bearSanctuary"},
-  {time:"אופציונלי", txt:"מסלול קארטינג Prejmer Raceway — כ-25 דקות מבראן. אופציה טובה לילד בן ה-12 אם יש חשק לפעילות אקשן קצרה, אפשר לשלב עם הביקור במבצר הכנסייה הסמוך.", optional:true, placeId:"prejmerKarting"},
-  {time:"אופציונלי", txt:"תוכנית חלופית א' — יום מורשת ונוף (בלי רכבל): רק תצפית בראן + גיחה קצרה למבצר הכנסייה Prejmer, פיקניק/צהריים בכפר קרוב, וחזרה מוקדמת לווילה למנוחה וברבקיו.", optional:true, placeId:"prejmer"},
-  {time:"אופציונלי", txt:"תוכנית חלופית ב' — יום חופשי בווילה: קמים בלי שעון מעורר, ארוחת בוקר ארוכה, ורק גיחה קצרה לבראן/פויאנה למי שרוצה — או מנוחה מלאה כל היום לקראת הנסיעה לבוקרשט למחרת.", optional:true, placeId:"lodge"}
+  {time:"09:15", txt:"שמורת הדובים Libearty בזרנשטי — כ-20 דקות מהווילה.", optional:true, placeId:"bearSanctuary"},
+  {time:"11:00", txt:"תצפית וסיבוב רגוע ליד טירת בראן — כ-20 דקות מזרנשטי, בדרך חזרה לכיוון הווילה.", placeId:"bran"},
+  {time:"צהריים", txt:"נסיעה לפויאנה בראשוב (כ-25 דקות מבראן) ועלייה ברכבל לפסגה.", placeId:"poianaBrasov"},
+  {time:"13:30", txt:"ארוחת צהריים — כמה אופציות בפסגה או חזרה לווילה.", optional:true, detail:"<div class='alt-stay-list'><div class='alt-stay-opt'><div class='alt-stay-head'><span>Cabana Postavaru</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Cabana%20Postavaru%20Poiana%20Brasov' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>ממש ליד תחנת הרכבל העליונה · מרפסת ונוף פתוח על ההרים · המסעדה הכי פופולרית באזור הפסגה</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>Yager Chalet</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Yager%20Chalet%20Poiana%20Brasov' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>גם ממש ליד תחנת ההגעה של הרכבל · בר ומסעדה, אפשרות נוספת אם קאבנה פוסטוורו עמוסה</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>לאכול בווילה</span></div><div class='alt-stay-meta'>לרדת ישר אחרי הרכבל בלי לעצור לארוחה, ולאכול צהריים רגוע בווילה בבראן — פחות זמן על ההר, יותר זמן בבריכה</div></div></div>"},
+  {time:"אופציונלי", txt:"מסלול קארטינג Prejmer Raceway — כ-20 דקות מבראשוב. אופציה טובה לילד בן ה-12 אם יש חשק לפעילות אקשן קצרה.", optional:true, placeId:"prejmerKarting"},
+  {time:"ערב", txt:"חזרה לווילה, בילוי בבריכה/ג'קוזי, וערב פרידה רגוע מההרים לפני שממשיכים לכיוון בוקרשט.", placeId:"lodge"}
   ]
   },
   {
@@ -860,11 +930,11 @@ const TRIP = {
   stay:{name:"Hotel Cismigiu, בוקרשט", booked:true, mapsQuery:"Hotel Cismigiu Bucharest", placeId:"cismigiuHotel"},
   events:[
   {time:"08:00", txt:"יציאה מוקדמת מבראן לכיוון בוקרשט.", placeId:"bran"},
-  {time:"09:30", txt:"סיור בארמון פלש בסינאיה.", note:"חובה כרטיסים מראש באתר הרשמי", placeId:"peles"},
+  {time:"09:30", txt:"סיור בארמון פלש בסינאיה — כשעה עד שעה וחצי נסיעה מבראן.", note:"חובה כרטיסים מראש באתר הרשמי", placeId:"peles"},
   {time:"11:30", txt:"מזחלת ההרים Alpine Coaster Sinaia — ממש באותה עיר, בלי סטייה מהמסלול. מסלול חדש (2+ ק\"מ, כ-5 דקות רכיבה), 70 לאו לרכיבה.", placeId:"alpineCoasterSinaia"},
-  {time:"צהריים", txt:"הגעה לבוקרשט, צ'ק-אין במלון Cismigiu וחניית 2 הרכבים בחניון הייעודי של המלון.", placeId:"cismigiuHotel"},
-  {time:"אחה\"צ", txt:"סיבוב רגלי ב-Lipscani.", placeId:"lipscani"},
-  {time:"אופציונלי", txt:"או לחילופין: פארק הרסטראו.", optional:true, placeId:"herastrau"},
+  {time:"צהריים", txt:"הגעה לבוקרשט (כ-1.5-2 שעות מסינאיה), צ'ק-אין במלון Cismigiu וחניית 2 הרכבים בחניון הייעודי של המלון.", placeId:"cismigiuHotel"},
+  {time:"אחה\"צ", txt:"סיבוב רגלי ב-Lipscani (כ-10 דקות הליכה מהמלון).", placeId:"lipscani"},
+  {time:"אופציונלי", txt:"פארק הרסטראו.", optional:true, placeId:"herastrau"},
   {time:"19:00", txt:"ארוחת ערב חגיגית ומופע פולקלור ב-Caru' cu Bere (כ-7 דקות הליכה מהמלון).", note:"מאושר שולחן ל-11 איש", placeId:"caru"}
   ]
   },
@@ -874,9 +944,12 @@ const TRIP = {
   theme:[{icon:"",label:"Therme Bucharest"},{icon:"",label:"טיסה חזרה"}],
   stay:{name:"טיסה חזרה בערב — אין לינה", booked:true, noStay:true},
   events:[
-  {time:"בוקר", txt:"צ'ק-אאוט מ-Hotel Cismigiu, העמסת מזוודות ונסיעה למתחם הספא Therme Bucharest.", note:"חובה להזמין כרטיסים אונליין מראש למתחם Galaxy!", placeId:"therme"},
+  {time:"09:00", txt:"צ'ק-אאוט מ-Hotel Cismigiu והעמסת מזוודות.", placeId:"cismigiuHotel"},
+  {time:"09:30", txt:"נסיעה למתחם הספא Therme Bucharest (כ-25-30 דקות מהמלון).", note:"חובה להזמין כרטיסים אונליין מראש למתחם Galaxy!", placeId:"therme"},
   {time:"צהריים", txt:"בריכות, מגלשות מים ורוגע בטרמה.", placeId:"therme"},
-  {time:"ערב", txt:"נסיעה לשדה התעופה, החזרת רכבים וטיסה לישראל.", placeId:"airport"}
+  {time:"אופציונלי", txt:"קניות אחרונות בדרך לשדה — קניוני AFI Cotroceni או Băneasa Shopping City, שניהם בכיוון שדה התעופה.", optional:true},
+  {time:"17:45", txt:"הגעה לשדה התעופה (כ-35-40 דקות מהטרמה), החזרת שני הרכבים השכורים.", placeId:"airport"},
+  {time:"20:45", txt:"המראה — טיסה חזרה לישראל.", placeId:"airport"}
   ]
   }
   ],
@@ -1152,6 +1225,7 @@ function renderShoppingPanel(listId){
   PLACE DETAIL SHEET (modal)
   ========================================================= */
 const PIN_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z"/><circle cx="12" cy="8.8" r="2.4"/></svg>`;
+const CLOCK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>`;
 const ZOOM_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M10.5 8v5M8 10.5h5"/></svg>`;
 const PLAY_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>`;
 const PENCIL_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>`;
@@ -1287,6 +1361,7 @@ function openPlaceSheet(placeId, shopId){
   ${shopData?`<button class="shop-toggle-btn" id="shopToggleBtn"><span>${shopData.title}</span></button>${renderShoppingPanel(shopId)}`:''}
   ${p.kidsStory?`<h4>בגובה העיניים של הילדים</h4><p>${p.kidsStory}</p>`:''}
   ${p.practical?`<h4>מידע פרקטי</h4><p>${p.practical}</p>`:''}
+  ${p.hours?`<div class="hours-chip">${CLOCK_SVG}<span>${p.hours}</span></div>`:''}
   ${p.podcastScript?`<h4>פודקאסט קצר</h4>
   <div class="podcast-box">
   <button class="podcast-play" id="podcastPlayBtn">${SPEAKER_SVG} השמיעו את הסיפור</button>
@@ -1296,6 +1371,7 @@ function openPlaceSheet(placeId, shopId){
   </div>
   `;
   document.getElementById('sheetBackdrop').classList.add('open');
+  lockBodyScroll();
   document.getElementById('sheetCloseBtn').onclick = closePlaceSheet;
   if(p.podcastScript){
   document.getElementById('podcastPlayBtn').onclick = (e)=> togglePodcast(p.podcastScript, e.currentTarget);
@@ -1344,6 +1420,7 @@ function openEventSheet(dayId, idx){
   </div>
   `;
   document.getElementById('sheetBackdrop').classList.add('open');
+  lockBodyScroll();
   document.getElementById('sheetCloseBtn').onclick = closePlaceSheet;
   if(e.video){
   const vb = document.getElementById('eventVideoBtn');
@@ -1438,9 +1515,28 @@ document.getElementById('lightboxBackdrop').addEventListener('click', (e)=>{
   if(e.target.id==='lightboxBackdrop') closeLightbox();
 });
 
+let __scrollLockY = 0;
+function lockBodyScroll(){
+  __scrollLockY = window.scrollY || window.pageYOffset || 0;
+  document.body.style.position = 'fixed';
+  document.body.style.top = (-__scrollLockY) + 'px';
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll(){
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  window.scrollTo(0, __scrollLockY);
+}
+
 function closePlaceSheet(){
   stopHeroAuto();
   document.getElementById('sheetBackdrop').classList.remove('open');
+  unlockBodyScroll();
 }
 document.getElementById('sheetBackdrop').addEventListener('click', (e)=>{
   if(e.target.id==='sheetBackdrop') closePlaceSheet();
@@ -1935,17 +2031,8 @@ function initExpenseForm(){
   const isOpen = addForm.classList.toggle('open');
   addToggleBtn.textContent = isOpen ? ' סגירה' : ' הוספת הוצאה';
   };
-  const convPanel = document.getElementById('currConvPanel');
-  const convToggleBtn = document.getElementById('currConvToggleBtn');
-  const convToggleLabel = document.getElementById('currConvToggleLabel');
   const convInput = document.getElementById('currConvInput');
   const convResult = document.getElementById('currConvResult');
-  convToggleBtn.onclick = ()=>{
-  const isOpen = convPanel.style.display !== 'none';
-  convPanel.style.display = isOpen ? 'none' : 'block';
-  convToggleLabel.textContent = isOpen ? 'פתיחת ממיר מטבע' : 'סגירת ממיר מטבע';
-  if(!isOpen) convInput.focus();
-  };
   convInput.oninput = ()=>{
   const ron = Number(convInput.value) || 0;
   const ils = ron * (EXCHANGE_TO_ILS.RON || 0.67);
@@ -2110,6 +2197,85 @@ document.querySelectorAll('nav.tabs button').forEach(btn=>{
 renderToday();
 renderIntroPodcast();
 loadWeather();
+document.querySelectorAll('.route-pin').forEach(btn=>{
+  btn.onclick = ()=> openPlaceSheet(btn.dataset.place);
+});
+(function initFullscreenMap(){
+  const wrap = document.getElementById('routeMapWrap');
+  const backdrop = document.getElementById('mapFsBackdrop');
+  const viewport = document.getElementById('mapFsViewport');
+  const canvas = document.getElementById('mapFsCanvas');
+  const closeBtn = document.getElementById('mapFsCloseBtn');
+  const zoomInBtn = document.getElementById('mapFsZoomIn');
+  const zoomOutBtn = document.getElementById('mapFsZoomOut');
+  const resetBtn = document.getElementById('mapFsReset');
+  if(!wrap || !backdrop) return;
+
+  const CW = 600, CH = 440;
+  let scale = 1, tx = 0, ty = 0, baseScale = 1;
+
+  function applyTransform(){
+  canvas.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+  }
+  function fitToViewport(){
+  const vw = viewport.clientWidth, vh = viewport.clientHeight;
+  baseScale = Math.min(vw/CW, vh/CH) * 0.92;
+  scale = baseScale;
+  tx = (vw - CW*scale)/2;
+  ty = (vh - CH*scale)/2;
+  applyTransform();
+  }
+  function openMap(){
+  canvas.innerHTML = wrap.innerHTML;
+  canvas.querySelectorAll('.route-pin').forEach(btn=>{
+  btn.onclick = (e)=>{ e.stopPropagation(); closeMap(); openPlaceSheet(btn.dataset.place); };
+  });
+  backdrop.classList.add('open');
+  lockBodyScroll();
+  requestAnimationFrame(fitToViewport);
+  }
+  function closeMap(){
+  backdrop.classList.remove('open');
+  unlockBodyScroll();
+  }
+
+  wrap.addEventListener('click', (e)=>{
+  if(e.target.closest('.route-pin')) return;
+  openMap();
+  });
+  closeBtn.onclick = closeMap;
+  zoomInBtn.onclick = ()=>{ scale = Math.min(scale*1.4, baseScale*6); applyTransform(); };
+  zoomOutBtn.onclick = ()=>{ scale = Math.max(scale/1.4, baseScale*0.6); applyTransform(); };
+  resetBtn.onclick = fitToViewport;
+
+  let touchState = null;
+  viewport.addEventListener('touchstart', (e)=>{
+  if(e.touches.length === 1){
+  touchState = {mode:'pan', startX:e.touches[0].clientX, startY:e.touches[0].clientY, tx0:tx, ty0:ty};
+  } else if(e.touches.length === 2){
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  touchState = {mode:'pinch', startDist:Math.hypot(dx,dy), scale0:scale};
+  }
+  }, {passive:true});
+  viewport.addEventListener('touchmove', (e)=>{
+  if(!touchState) return;
+  e.preventDefault();
+  if(touchState.mode === 'pan' && e.touches.length === 1){
+  tx = touchState.tx0 + (e.touches[0].clientX - touchState.startX);
+  ty = touchState.ty0 + (e.touches[0].clientY - touchState.startY);
+  applyTransform();
+  } else if(touchState.mode === 'pinch' && e.touches.length === 2){
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  const dist = Math.hypot(dx,dy);
+  const ratio = dist / touchState.startDist;
+  scale = Math.min(Math.max(touchState.scale0 * ratio, baseScale*0.6), baseScale*6);
+  applyTransform();
+  }
+  }, {passive:false});
+  viewport.addEventListener('touchend', ()=>{ touchState = null; });
+})();
 renderCulture();
 renderPhrases();
 renderQuiz();
