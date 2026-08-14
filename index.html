@@ -141,12 +141,12 @@
   .podcast-icon svg{width:18px; height:18px;}
   .podcast-title{font-size:.9rem; font-weight:800; color:var(--ink);}
   .podcast-sub{font-size:.68rem; color:var(--muted); margin-top:1px;}
-  .podcast-card audio{width:100%; accent-color:var(--folkred); border-radius:22px; height:40px; overflow:hidden;}
-  .podcast-card audio::-webkit-media-controls-panel{background-color:var(--night);}
-  .podcast-card audio::-webkit-media-controls-play-button,
-  .podcast-card audio::-webkit-media-controls-current-time-display,
-  .podcast-card audio::-webkit-media-controls-time-remaining-display,
-  .podcast-card audio::-webkit-media-controls-mute-button{color:#fff; filter:invert(1) grayscale(1) brightness(1.7);}
+  .pp-player{display:flex; align-items:center; gap:10px; background:var(--night); border-radius:22px; height:44px; padding:0 8px 0 14px;}
+  .pp-play{flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--folkred); border:none; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;}
+  .pp-play svg{width:14px; height:14px;}
+  .pp-track{flex:1; height:5px; background:rgba(255,255,255,.25); border-radius:3px; cursor:pointer; position:relative;}
+  .pp-progress{position:absolute; inset:0; width:0%; background:var(--folkred); border-radius:3px;}
+  .pp-time{flex:0 0 auto; font-size:.68rem; font-weight:700; color:#fff; font-family:'Rubik',sans-serif; min-width:32px; text-align:left;}
   .podcast-card video{width:100%; border-radius:10px; background:#000;}
   .daily-challenge-card{background:#fff; border:1px solid var(--line); box-shadow:var(--shadow); color:var(--ink); display:flex; align-items:center; gap:9px; padding:10px 12px; border-inline-start:4px solid var(--folkred);}
   .daily-challenge-card .dce{font-size:1.35rem; flex:0 0 auto; color:var(--folkred);}
@@ -345,25 +345,13 @@
   .sheet-body .tickets{background:var(--sage,oklch(94% 0.03 185)); border-radius:10px; padding:10px 12px; font-size:.8rem; margin-bottom:14px;}
   .hours-chip{display:flex; align-items:center; gap:6px; font-size:.74rem; color:var(--muted); margin-bottom:12px;}
   .hours-chip svg{width:14px; height:14px; flex:0 0 auto; color:var(--folkred);}
-  .route-map-wrap{position:relative; width:100%; aspect-ratio:600/440; background:var(--night); border-radius:16px; overflow:hidden; margin-bottom:8px; box-shadow:var(--shadow); touch-action:manipulation; cursor:pointer;}
-  .route-map-bg{position:absolute; inset:0; width:100%; height:100%; touch-action:manipulation;}
-  .route-pin{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; cursor:pointer; padding:6px; touch-action:manipulation;}
-  .route-pin-dot{width:10px; height:10px; border-radius:50%; background:var(--folkred); border:2px solid #fff; box-shadow:0 0 0 2.5px oklch(62% 0.19 30 / .35); flex:0 0 auto;}
-  .route-pin-label{font-size:.56rem; font-weight:700; color:#fff; background:rgba(0,0,0,.55); padding:2px 5px; border-radius:5px; white-space:nowrap; line-height:1.3;}
-  .route-map-expand-hint{position:absolute; left:8px; bottom:8px; width:26px; height:26px; border-radius:50%; background:rgba(0,0,0,.45); color:#fff; display:flex; align-items:center; justify-content:center; pointer-events:none;}
-  .route-map-expand-hint svg{width:14px; height:14px;}
+  .route-map-wrap{position:relative; width:100%; aspect-ratio:600/440; background:#F3EEE2; border-radius:16px; overflow:hidden; margin-bottom:8px; box-shadow:var(--shadow); touch-action:pan-y;}
+  .route-map-canvas{position:absolute; top:0; left:0; width:600px; height:440px; transform-origin:0 0; will-change:transform;}
+  .route-map-bg{position:absolute; inset:0; width:100%; height:100%; display:block;}
+  .route-pin{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; cursor:pointer; padding:6px;}
+  .route-pin-dot{width:11px; height:11px; border-radius:50%; background:var(--folkred); border:2px solid #fff; box-shadow:0 0 0 2.5px oklch(62% 0.19 30 / .35); flex:0 0 auto;}
+  .route-pin-label{font-size:.56rem; font-weight:800; color:var(--ink); background:rgba(255,255,255,.85); padding:2px 5px; border-radius:5px; white-space:nowrap; line-height:1.3; box-shadow:0 1px 3px rgba(0,0,0,.15);}
 
-  .map-fs-backdrop{position:fixed; inset:0; background:var(--night-deep); z-index:200; display:none; flex-direction:column;}
-  .map-fs-backdrop.open{display:flex;}
-  .map-fs-close{position:absolute; top:16px; left:16px; z-index:5; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); color:#fff; border:none; font-size:1.1rem; cursor:pointer;}
-  .map-fs-zoom-controls{position:absolute; bottom:20px; left:16px; z-index:5; display:flex; flex-direction:column; gap:8px;}
-  .map-fs-zoom-controls button{width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,.15); color:#fff; border:none; font-size:1.2rem; cursor:pointer; font-family:'Rubik',sans-serif;}
-  .map-fs-viewport{flex:1; overflow:hidden; touch-action:none; position:relative;}
-  .map-fs-canvas{position:absolute; top:0; left:0; width:600px; height:440px; transform-origin:0 0; will-change:transform;}
-  .map-fs-canvas .route-map-bg{position:absolute; inset:0; width:100%; height:100%;}
-  .map-fs-canvas .route-pin-label{font-size:.85rem; padding:4px 8px;}
-  .map-fs-canvas .route-pin-dot{width:16px; height:16px;}
-  .map-fs-canvas .route-map-expand-hint{display:none;}
   .route-map-note{font-size:.66rem; color:var(--muted); margin-bottom:14px; line-height:1.5;}
   .podcast-box{background:none; border:1px solid var(--line); border-radius:12px; padding:8px; margin-bottom:14px;}
   .podcast-play{display:flex; align-items:center; gap:7px; background:var(--folkred); color:#fff; border:none; border-radius:20px; padding:8px 14px; font-size:.78rem; font-weight:700; cursor:pointer; margin-bottom:0; font-family:'Rubik',sans-serif;}
@@ -403,14 +391,44 @@
 
   <h2 class="section-title">המסלול שלנו</h2>
   <div class="route-map-wrap" id="routeMapWrap">
+  <div class="route-map-canvas" id="routeMapCanvas">
   <svg class="route-map-bg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="600" height="440" fill="#F3EEE2"/>
   <path d="M180,30 C260,15 340,25 400,55 C460,80 520,90 555,140
   C580,175 575,220 545,245 C560,275 555,315 520,335
   C500,375 460,405 410,415 C350,430 280,425 230,400
   C180,415 120,405 90,365 C55,340 45,290 65,250
   C40,215 45,165 80,130 C70,90 100,55 150,40 C160,35 170,32 180,30 Z"
-  fill="#fff" opacity=".045" stroke="#fff" stroke-opacity=".1" stroke-width="2"/>
-  <text x="300" y="235" text-anchor="middle" fill="#fff" opacity=".08" font-size="34" font-weight="800" font-family="Rubik, sans-serif">ROMANIA</text>
+  fill="#CFE0C3" stroke="#B7CBA8" stroke-width="3"/>
+  <!-- decorative pine trees -->
+  <g fill="#6E9B6A" opacity=".8">
+  <g transform="translate(230,90)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(255,105) scale(.8)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(320,190) scale(.9)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(395,215) scale(.75)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(150,240) scale(.85)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  </g>
+  <!-- mountains (Carpathian arc) -->
+  <g opacity=".85">
+  <polygon points="255,150 285,95 315,150" fill="#A9B8A0"/>
+  <polygon points="278,120 285,105 292,120" fill="#F3EEE2"/>
+  <polygon points="330,175 360,120 390,175" fill="#9FAF96"/>
+  <polygon points="352,145 360,130 368,145" fill="#F3EEE2"/>
+  </g>
+  <!-- castle icon near Bran -->
+  <g transform="translate(500,180)" fill="var(--folkred)" opacity=".55">
+  <rect x="-18" y="-6" width="36" height="20"/>
+  <rect x="-18" y="-14" width="7" height="8"/>
+  <rect x="-4" y="-14" width="8" height="8"/>
+  <rect x="11" y="-14" width="7" height="8"/>
+  <polygon points="0,-30 -9,-14 9,-14"/>
+  </g>
+  <!-- bear icon near sanctuary -->
+  <g transform="translate(300,330)" fill="#8A5A3B" opacity=".55">
+  <circle cx="-10" cy="-16" r="6"/>
+  <circle cx="10" cy="-16" r="6"/>
+  <ellipse cx="0" cy="0" rx="20" ry="16"/>
+  </g>
   </svg>
   <button class="route-pin" style="left:32%; top:26%;" data-place="sibiu"><span class="route-pin-dot"></span><span class="route-pin-label">סיביו</span></button>
   <button class="route-pin" style="left:37%; top:34%;" data-place="astra"><span class="route-pin-dot"></span><span class="route-pin-label">ASTRA</span></button>
@@ -426,7 +444,7 @@
   <button class="route-pin" style="left:68%; top:66%;" data-place="peles"><span class="route-pin-dot"></span><span class="route-pin-label">סינאיה</span></button>
   <button class="route-pin" style="left:78%; top:86%;" data-place="airport"><span class="route-pin-dot"></span><span class="route-pin-label">שדה התעופה</span></button>
   <button class="route-pin" style="left:70%; top:94%;" data-place="cismigiuHotel"><span class="route-pin-dot"></span><span class="route-pin-label">בוקרשט</span></button>
-  <div class="route-map-expand-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg></div>
+  </div>
   </div>
 
   <h2 class="section-title">רומניה בקטנה</h2>
@@ -483,6 +501,7 @@
   <!-- ===================== EXPENSES ===================== -->
   <section class="screen" id="screen-expenses">
   <div class="card curr-conv-panel" id="currConvPanel">
+  <h2 class="section-title">המרת מטבע</h2>
   <div class="curr-conv-row">
   <input type="number" id="currConvInput" class="field" placeholder="סכום בלאו (RON)" style="margin-bottom:0;">
   <span class="curr-conv-eq">=</span>
@@ -490,7 +509,6 @@
   </div>
   </div>
 
-  <div class="exp-sync-status" id="expSyncStatus"></div>
   <div class="card" id="expenseSummary"></div>
 
   <button class="btn-primary" id="expAddToggleBtn">הוספת הוצאה</button>
@@ -519,6 +537,7 @@
   <h2 class="section-title">יומן ההוצאות</h2>
   <button class="exp-edit-toggle" id="expEditToggle" title="עריכה/מחיקה"></button>
   </div>
+  <div class="exp-sync-status" id="expSyncStatus"></div>
   <div id="expenseList"></div>
   </section>
 
@@ -537,19 +556,6 @@
   <button class="lightbox-nav-btn prev" id="lightboxPrev">‹</button>
   <img id="lightboxImg" src="" alt="">
   <button class="lightbox-nav-btn next" id="lightboxNext">›</button>
-</div>
-
-<!-- fullscreen zoomable route map -->
-<div class="map-fs-backdrop" id="mapFsBackdrop">
-  <button class="map-fs-close" id="mapFsCloseBtn">✕</button>
-  <div class="map-fs-zoom-controls">
-  <button id="mapFsZoomIn">+</button>
-  <button id="mapFsZoomOut">−</button>
-  <button id="mapFsReset">↺</button>
-  </div>
-  <div class="map-fs-viewport" id="mapFsViewport">
-  <div class="map-fs-canvas" id="mapFsCanvas"></div>
-  </div>
 </div>
 
 <!-- fullscreen video (tap a video-chip in the itinerary) -->
@@ -1558,9 +1564,44 @@ function renderIntroPodcast(){
   <div class="podcast-sub">כמה דקות רקע לפני שיוצאים</div>
   </div>
   </div>
-  <audio controls preload="metadata" src="${mediaUrl(INTRO_PODCAST_URL)}"></audio>
+  <div class="pp-player">
+  <button class="pp-play" id="ppPlayBtn">${PLAY_SVG}</button>
+  <div class="pp-track" id="ppTrack"><div class="pp-progress" id="ppProgress"></div></div>
+  <div class="pp-time" id="ppTime">0:00</div>
+  </div>
+  <audio id="introPodcastAudio" preload="metadata" src="${mediaUrl(INTRO_PODCAST_URL)}" style="display:none;"></audio>
   `;
-  attachMediaFallback(wrap.querySelector('audio'), INTRO_PODCAST_URL);
+  const audio = wrap.querySelector('#introPodcastAudio');
+  attachMediaFallback(audio, INTRO_PODCAST_URL);
+
+  const playBtn = wrap.querySelector('#ppPlayBtn');
+  const track = wrap.querySelector('#ppTrack');
+  const progress = wrap.querySelector('#ppProgress');
+  const timeEl = wrap.querySelector('#ppTime');
+  const PAUSE_SVG_ICON = `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`;
+
+  function fmt(sec){
+  if(!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec/60), s = Math.floor(sec%60);
+  return m + ':' + String(s).padStart(2,'0');
+  }
+  playBtn.onclick = ()=>{
+  if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
+  };
+  audio.addEventListener('play', ()=>{ playBtn.innerHTML = PAUSE_SVG_ICON; });
+  audio.addEventListener('pause', ()=>{ playBtn.innerHTML = PLAY_SVG; });
+  audio.addEventListener('timeupdate', ()=>{
+  const pct = audio.duration ? (audio.currentTime/audio.duration)*100 : 0;
+  progress.style.width = pct + '%';
+  timeEl.textContent = fmt(audio.currentTime);
+  });
+  audio.addEventListener('loadedmetadata', ()=>{ timeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('ended', ()=>{ playBtn.innerHTML = PLAY_SVG; progress.style.width='0%'; });
+  track.addEventListener('click', (e)=>{
+  const rect = track.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  if(audio.duration) audio.currentTime = ratio * audio.duration;
+  });
 }
 
 const WEATHER_SPOTS = [
@@ -2200,16 +2241,10 @@ loadWeather();
 document.querySelectorAll('.route-pin').forEach(btn=>{
   btn.onclick = ()=> openPlaceSheet(btn.dataset.place);
 });
-(function initFullscreenMap(){
+(function initInlineMapZoom(){
   const wrap = document.getElementById('routeMapWrap');
-  const backdrop = document.getElementById('mapFsBackdrop');
-  const viewport = document.getElementById('mapFsViewport');
-  const canvas = document.getElementById('mapFsCanvas');
-  const closeBtn = document.getElementById('mapFsCloseBtn');
-  const zoomInBtn = document.getElementById('mapFsZoomIn');
-  const zoomOutBtn = document.getElementById('mapFsZoomOut');
-  const resetBtn = document.getElementById('mapFsReset');
-  if(!wrap || !backdrop) return;
+  const canvas = document.getElementById('routeMapCanvas');
+  if(!wrap || !canvas) return;
 
   const CW = 600, CH = 440;
   let scale = 1, tx = 0, ty = 0, baseScale = 1;
@@ -2217,64 +2252,62 @@ document.querySelectorAll('.route-pin').forEach(btn=>{
   function applyTransform(){
   canvas.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
   }
-  function fitToViewport(){
-  const vw = viewport.clientWidth, vh = viewport.clientHeight;
-  baseScale = Math.min(vw/CW, vh/CH) * 0.92;
+  function clamp(){
+  const vw = wrap.clientWidth, vh = wrap.clientHeight;
+  const contentW = CW*scale, contentH = CH*scale;
+  const minX = Math.min(0, vw - contentW), maxX = Math.max(0, vw - contentW);
+  const minY = Math.min(0, vh - contentH), maxY = Math.max(0, vh - contentH);
+  tx = Math.min(Math.max(tx, minX), maxX);
+  ty = Math.min(Math.max(ty, minY), maxY);
+  }
+  function fitToWrap(){
+  const vw = wrap.clientWidth, vh = wrap.clientHeight;
+  baseScale = Math.max(vw/CW, vh/CH);
   scale = baseScale;
   tx = (vw - CW*scale)/2;
   ty = (vh - CH*scale)/2;
   applyTransform();
   }
-  function openMap(){
-  canvas.innerHTML = wrap.innerHTML;
-  canvas.querySelectorAll('.route-pin').forEach(btn=>{
-  btn.onclick = (e)=>{ e.stopPropagation(); closeMap(); openPlaceSheet(btn.dataset.place); };
-  });
-  backdrop.classList.add('open');
-  lockBodyScroll();
-  requestAnimationFrame(fitToViewport);
-  }
-  function closeMap(){
-  backdrop.classList.remove('open');
-  unlockBodyScroll();
-  }
-
-  wrap.addEventListener('click', (e)=>{
-  if(e.target.closest('.route-pin')) return;
-  openMap();
-  });
-  closeBtn.onclick = closeMap;
-  zoomInBtn.onclick = ()=>{ scale = Math.min(scale*1.4, baseScale*6); applyTransform(); };
-  zoomOutBtn.onclick = ()=>{ scale = Math.max(scale/1.4, baseScale*0.6); applyTransform(); };
-  resetBtn.onclick = fitToViewport;
+  requestAnimationFrame(fitToWrap);
+  window.addEventListener('resize', fitToWrap);
 
   let touchState = null;
-  viewport.addEventListener('touchstart', (e)=>{
+  let lastTapTime = 0;
+  wrap.addEventListener('touchstart', (e)=>{
   if(e.touches.length === 1){
+  const now = Date.now();
+  if(now - lastTapTime < 300){ fitToWrap(); touchState = null; lastTapTime = 0; return; }
+  lastTapTime = now;
+  if(scale > baseScale * 1.03){
   touchState = {mode:'pan', startX:e.touches[0].clientX, startY:e.touches[0].clientY, tx0:tx, ty0:ty};
+  }
   } else if(e.touches.length === 2){
   const dx = e.touches[0].clientX - e.touches[1].clientX;
   const dy = e.touches[0].clientY - e.touches[1].clientY;
-  touchState = {mode:'pinch', startDist:Math.hypot(dx,dy), scale0:scale};
+  touchState = {mode:'pinch', startDist:Math.hypot(dx,dy), scale0:scale, tx0:tx, ty0:ty};
   }
   }, {passive:true});
-  viewport.addEventListener('touchmove', (e)=>{
+  wrap.addEventListener('touchmove', (e)=>{
   if(!touchState) return;
   e.preventDefault();
   if(touchState.mode === 'pan' && e.touches.length === 1){
   tx = touchState.tx0 + (e.touches[0].clientX - touchState.startX);
   ty = touchState.ty0 + (e.touches[0].clientY - touchState.startY);
+  clamp();
   applyTransform();
   } else if(touchState.mode === 'pinch' && e.touches.length === 2){
   const dx = e.touches[0].clientX - e.touches[1].clientX;
   const dy = e.touches[0].clientY - e.touches[1].clientY;
   const dist = Math.hypot(dx,dy);
   const ratio = dist / touchState.startDist;
-  scale = Math.min(Math.max(touchState.scale0 * ratio, baseScale*0.6), baseScale*6);
+  scale = Math.min(Math.max(touchState.scale0 * ratio, baseScale), baseScale*5);
+  clamp();
   applyTransform();
   }
   }, {passive:false});
-  viewport.addEventListener('touchend', ()=>{ touchState = null; });
+  wrap.addEventListener('touchend', (e)=>{
+  if(e.touches.length === 0) touchState = null;
+  });
 })();
 renderCulture();
 renderPhrases();
