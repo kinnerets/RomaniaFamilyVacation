@@ -1,0 +1,2400 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>הרפתקה ברומניה</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="רומניה">
+<meta name="theme-color" content="#181A2E">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+  --night:oklch(18% 0.01 260); --night-deep:oklch(14% 0.01 260);
+  --cream:oklch(98% 0.005 90); --amber:oklch(62% 0.19 30); --amber-deep:oklch(56% 0.19 30);
+  --folkred:oklch(62% 0.19 30); --forest:oklch(55% 0.12 185); --ink:oklch(18% 0.01 260); --paper:oklch(100% 0 0);
+  --line:oklch(90% 0.008 90); --muted:oklch(55% 0.01 260);
+  --shadow:0 1px 2px oklch(30% 0.01 260 / .04), 0 6px 16px oklch(30% 0.01 260 / .05);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:#0A0D1C; font-family:'Rubik',sans-serif; color:var(--ink); display:flex; justify-content:center; min-height:100vh;}
+  .phone{width:100%; max-width:430px; min-height:100vh; background:var(--cream); position:relative; overflow-x:hidden; box-shadow:0 0 70px rgba(0,0,0,.55);}
+  .motif{display:none;}
+  *{-webkit-tap-highlight-color:transparent; -webkit-touch-callout:none;}
+  button, a{-webkit-tap-highlight-color:transparent; outline:none;}
+
+  header{background:var(--night); padding:12px 20px 8px; display:flex; justify-content:space-between; align-items:flex-start;}
+  header h1{font-family:'Rubik',sans-serif; font-weight:900; font-size:1rem; margin:0 0 2px; color:var(--cream);}
+  header .sub{font-size:.72rem; opacity:.75; margin:0; color:var(--cream);}
+
+  nav.tabs{display:flex; background:var(--night); position:sticky; top:0; z-index:20; border-bottom:3px solid var(--folkred);}
+  nav.tabs button{flex:1; background:none; border:none; color:oklch(72% 0.015 260); font-family:'Rubik',sans-serif; font-size:.74rem; font-weight:600;
+  padding:11px 2px 9px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; border-bottom:3px solid transparent;}
+  nav.tabs button .ic{width:20px; height:20px; display:flex; align-items:center; justify-content:center;}
+  nav.tabs button .ic svg{width:20px; height:20px; display:block;}
+  nav.tabs button.active{color:#fff; background:var(--folkred); border-bottom-color:var(--folkred);}
+
+  main{padding:16px 16px 40px;}
+  .screen{display:none; animation:fade .25s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+
+  h2.section-title{font-family:'Rubik',sans-serif; font-size:1.1rem; color:var(--night); font-weight:800; margin:4px 0 12px; display:flex; align-items:center; gap:9px;}
+  h2.section-title::before{content:''; width:5px; height:18px; background:var(--folkred); border-radius:3px; display:inline-block;}
+
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px; box-shadow:var(--shadow);}
+
+  /* ===== ROUTE MAP (prominent, vertical) ===== */
+
+  /* journey strip: day switcher + route overview in one */
+  .day-strip{display:flex; align-items:flex-start; overflow-x:auto; padding:4px 2px 10px; margin-bottom:10px; scrollbar-width:none;}
+  .day-strip::-webkit-scrollbar{display:none;}
+  .day-chip{flex:0 0 auto; background:none; border:none; text-align:center; cursor:pointer; font-size:.68rem; white-space:nowrap; position:relative; padding:0 10px; font-family:'Rubik',sans-serif; color:var(--ink);}
+  .day-chip .dot{width:34px; height:34px; border-radius:50%; background:#EFE7D2; border:2px solid var(--amber); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.9rem; margin:0 auto 4px; position:relative; z-index:2;}
+  .day-chip:not(:first-child) .dot::after{content:''; position:absolute; top:50%; left:100%; transform:translateY(-50%); width:62px; height:2px; background:rgba(232,163,61,.45); z-index:1;}
+  .day-chip b{display:block; font-size:.72rem;}
+  .day-chip .dloc{display:block; font-size:.62rem; opacity:.75; width:76px; margin:1px auto 0; white-space:normal; line-height:1.25;}
+  .day-chip.active .dot{background:var(--night); color:var(--amber); border-color:var(--night); box-shadow:0 0 0 3px rgba(232,163,61,.35);}
+  .day-chip.active b{color:var(--folkred);}
+  .day-chip.past{opacity:.45;}
+  .day-chip.past .dot{border-color:#b9ad91;}
+  .day-chip.past .dot::before{content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#EFE7D2; border-radius:50%; color:var(--forest); font-size:.85rem;}
+  .day-chip.past.active{opacity:1;}
+
+  .stay-banner{background:var(--forest); color:#fff; border-radius:12px; padding:10px 14px; font-size:.78rem; margin-bottom:10px;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap; text-decoration:none;}
+  .stay-banner.tappable{cursor:pointer;}
+  .stay-banner .stay-text{flex:1;}
+  .stay-banner .tbd{background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.5); border-radius:8px; padding:1px 8px; font-size:.66rem; font-weight:700;}
+  .stay-banner .stay-navlink{margin-inline-start:auto; background:rgba(255,255,255,.2); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; flex:0 0 auto;}
+  .stay-banner .stay-navlink svg{width:15px; height:15px; display:block;}
+  .day-theme{display:flex; flex-wrap:wrap; gap:6px; margin:-4px 0 10px;}
+  .theme-chip{background:#EFE7D2; color:var(--night); border-radius:8px; padding:3px 9px; font-size:.68rem; font-weight:600;}
+
+  .event{display:flex; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line); align-items:flex-start;}
+  .event:last-child{border-bottom:none;}
+  .event.optional{opacity:.85;}
+  .event .time{font-weight:800; color:var(--folkred); min-width:46px; font-size:.78rem; padding-top:2px;}
+  .event.optional .time{color:var(--amber-deep);}
+  .event .txt{font-size:.85rem; line-height:1.5; flex:1;}
+  .event .note{display:inline-flex; align-items:center; background:#fff; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:3px 8px; font-size:.66rem; height:24px; box-sizing:border-box;}
+  .event .opt-badge{display:inline-block; margin-inline-start:4px; background:#EFE7D2; color:var(--muted); border-radius:8px; padding:1px 7px; font-size:.62rem;}
+  .event-meta{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;}
+  .maplink{display:inline-flex; align-items:center; justify-content:center; color:var(--forest); text-decoration:none; width:40px; height:40px; background:oklch(94% 0.03 185); border-radius:11px; border:1px solid oklch(85% 0.06 185); flex:0 0 auto; align-self:center; -webkit-tap-highlight-color:rgba(0,0,0,.08);}
+  .maplink svg{width:19px; height:19px; display:block;}
+  .event.tappable{cursor:pointer;}
+  .event-chevron{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; flex:0 0 auto; align-self:center; color:var(--folkred); opacity:1; transform:scaleX(-1); background:oklch(62% 0.19 30 / .12); border-radius:50%;}
+  .event-chevron svg{width:15px; height:15px; display:block;}
+  .video-chip-label{display:inline-flex; align-items:center; gap:4px; background:#EDEBFB; color:#4B3F9E; border:1px solid #D2CCF2; border-radius:8px; padding:3px 8px; font-size:.66rem; height:24px; box-sizing:border-box;}
+
+  .event.tappable:active{background:rgba(232,163,61,.08);}
+  .detail-chip{
+  display:inline-flex; align-items:center; justify-content:center; gap:3px; background:#fff; border:1px solid var(--line);
+  color:var(--ink); font-size:.66rem; font-weight:700; line-height:1; border-radius:7px; height:24px; padding:0 8px; box-sizing:border-box; flex:0 0 auto;
+  cursor:pointer;
+  }
+  .detail-chip svg{width:11px; height:11px; display:block;}
+
+  /* ===== Romania tab ===== */
+  .culture-block h4{font-family:'Rubik',sans-serif; font-size:.92rem; color:var(--folkred); margin:14px 0 6px;}
+  .culture-block h4:first-child{margin-top:0;}
+  .culture-block ul{margin:0 0 4px; padding-inline-start:18px; font-size:.83rem; line-height:1.65;}
+  .culture-block p{font-size:.85rem; line-height:1.65; margin:0;}
+  .fact-card{display:flex; gap:10px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:8px;}
+  .fact-card .fe{font-size:1.4rem; flex:0 0 auto;}
+  .fact-card .ft b{display:block; font-size:.85rem; color:var(--night); margin-bottom:2px;}
+  .fact-card .ft span{font-size:.8rem; line-height:1.55; color:var(--ink);}
+
+  .phrase-row{display:flex; justify-content:flex-start; align-items:center; padding:10px 4px; border-bottom:1px solid var(--line); gap:10px;}
+  .phrase-row:last-child{border-bottom:none;}
+  .phrase-row .txt{flex:1;}
+  .phrase-row .he-word{display:block; font-weight:800; font-size:1.02rem; color:var(--night);}
+  .phrase-row .ro-line{display:block; font-size:.76rem; color:var(--muted); margin-top:2px;}
+  .phrase-row .ro-line b{color:var(--folkred); font-weight:700;}
+  .say-btn{flex:0 0 auto; background:var(--forest); color:#fff; border:none; border-radius:50%; width:38px; height:38px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .say-btn svg{width:18px; height:18px;}
+  .say-btn.playing{background:var(--folkred);}
+
+  /* ===== games ===== */
+  .quiz-q{font-weight:700; margin-bottom:9px; font-size:.9rem;}
+  .quiz-opt{display:block; width:100%; text-align:right; background:#fff; border:2px solid var(--line); border-radius:10px; padding:9px 12px; margin-bottom:7px; font-size:.82rem; cursor:pointer; font-family:'Rubik',sans-serif; font-weight:500;}
+  .quiz-opt.correct{background:oklch(94% 0.03 185); border-color:var(--forest);}
+  .quiz-opt.wrong{background:#F6D6D2; border-color:var(--folkred);}
+  .quiz-feedback{font-size:.78rem; margin-top:6px; padding:8px; border-radius:8px; background:oklch(97% 0.006 90); border:1px solid var(--line); color:var(--ink);}
+  .quiz-progress{font-size:.7rem; color:var(--muted); margin-bottom:10px;}
+
+  .team-row{display:flex; align-items:center; gap:10px; background:var(--paper); border-radius:12px; padding:10px 12px; margin-bottom:8px; border:1px solid var(--line);}
+  .team-row .rank{font-family:'Rubik',sans-serif; font-weight:900; font-size:1.05rem; color:var(--amber-deep); width:20px;}
+  .team-row .name{flex:1; font-weight:600; font-size:.88rem;}
+  .team-row .name .ranktitle{display:block; font-size:.66rem; font-weight:400; color:var(--muted); margin-top:1px;}
+
+  /* ===== daily challenge ===== */
+  .podcast-card{padding:12px 14px;}
+  .podcast-head{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .podcast-icon{flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--folkred); color:#fff; display:flex; align-items:center; justify-content:center;}
+  .podcast-icon svg{width:18px; height:18px;}
+  .podcast-title{font-size:.9rem; font-weight:800; color:var(--ink);}
+  .podcast-sub{font-size:.68rem; color:var(--muted); margin-top:1px;}
+  .pp-player{display:flex; align-items:center; gap:10px; background:var(--night); border-radius:22px; height:44px; padding:0 8px 0 14px;}
+  .pp-play{flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--folkred); border:none; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;}
+  .pp-play svg{width:14px; height:14px;}
+  .pp-track{flex:1; height:5px; background:rgba(255,255,255,.25); border-radius:3px; cursor:pointer; position:relative;}
+  .pp-progress{position:absolute; inset:0; width:0%; background:var(--folkred); border-radius:3px;}
+  .pp-time{flex:0 0 auto; font-size:.68rem; font-weight:700; color:#fff; font-family:'Rubik',sans-serif; min-width:32px; text-align:left;}
+  .podcast-card video{width:100%; border-radius:10px; background:#000;}
+  .daily-challenge-card{background:#fff; border:1px solid var(--line); box-shadow:var(--shadow); color:var(--ink); display:flex; align-items:center; gap:9px; padding:10px 12px; border-inline-start:4px solid var(--folkred);}
+  .daily-challenge-card .dce{font-size:1.35rem; flex:0 0 auto; color:var(--folkred);}
+  .daily-challenge-card .dct{flex:1; font-size:.74rem; line-height:1.3; color:var(--ink);}
+  .daily-challenge-card .dct b{display:block; font-size:.62rem; opacity:.8; margin-bottom:1px; font-weight:700; color:var(--muted);}
+  .daily-challenge-card .dcbtns{display:flex; flex-direction:column; gap:4px; flex:0 0 auto;}
+  .daily-challenge-card button{background:var(--folkred); border:1px solid var(--folkred); color:#fff; border-radius:7px; padding:5px 9px; font-size:.64rem; font-weight:700; cursor:pointer; font-family:'Rubik',sans-serif; white-space:nowrap;}
+  .daily-challenge-card #dailyActionBtn{background:var(--night); border-color:var(--night); color:#fff;}
+  .daily-challenge-card button:disabled{opacity:.4; cursor:not-allowed;}
+  .daily-challenge-card.done{border-inline-start-color:var(--forest);}
+  .daily-challenge-card.done #dailyDoneBtn{background:var(--forest); border-color:var(--forest);}
+
+  /* ===== scavenger hunt ===== */
+  .scav-item{display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px dashed var(--line);}
+  .scav-item:last-child{border-bottom:none;}
+  .scav-item .se{font-size:1.2rem;}
+  .scav-item .st{flex:1; font-size:.85rem;}
+  .scav-item.found .st{text-decoration:line-through; color:var(--muted);}
+  .scav-item button{flex:0 0 auto; background:var(--folkred); border:1px solid var(--folkred); color:#fff; border-radius:9px; padding:10px 18px; font-size:.8rem; font-weight:700; cursor:pointer; font-family:'Rubik',sans-serif; min-height:40px;}
+  .scav-item.found button{background:var(--forest); border-color:var(--forest); color:#fff;}
+
+  /* ===== price game ===== */
+  .price-q{background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px;}
+  .price-q:last-child{margin-bottom:0;}
+  .price-q .pi{font-weight:700; font-size:.85rem; margin-bottom:8px;}
+  .price-opt{display:inline-block; background:#fff; border:2px solid var(--line); border-radius:8px; padding:6px 10px; font-size:.76rem; margin:0 4px 4px 0; cursor:pointer; font-family:'Rubik',sans-serif;}
+  .price-opt.correct{background:oklch(94% 0.03 185); border-color:var(--forest);}
+  .price-opt.wrong{background:#F6D6D2; border-color:var(--folkred);}
+
+  /* ===== bingo ===== */
+  .bingo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:6px;}
+  .bingo-cell{aspect-ratio:1; background:#fff; border:2px solid var(--line); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; padding:4px; text-align:center;}
+  .bingo-cell .be{font-size:1.3rem;}
+  .bingo-cell .bt{font-size:.6rem; line-height:1.2;}
+  .bingo-cell.marked{background:var(--forest); border-color:var(--forest);}
+  .bingo-cell.marked .bt{color:#fff;}
+  .bingo-complete-msg{text-align:center; margin-top:10px; font-size:.8rem; color:var(--forest); font-weight:700;}
+
+  /* ===== games menu (minimalist entry screen) ===== */
+  .games-menu{display:flex; flex-direction:column; gap:10px;}
+  .game-tile{display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; text-align:right; cursor:pointer; box-shadow:var(--shadow); font-family:'Rubik',sans-serif; width:100%;}
+  .game-tile .gt-emoji{font-size:1.7rem; flex:0 0 auto;}
+  .game-tile .gt-text{flex:1; display:flex; flex-direction:column; gap:2px;}
+  .game-tile .gt-title{font-weight:700; font-size:.9rem; color:var(--night);}
+  .game-tile .gt-desc{font-size:.72rem; color:var(--muted); line-height:1.4;}
+  .game-panel{display:none;}
+  .game-panel.open{display:block;}
+  .games-back{
+  position:sticky; top:54px; z-index:15; display:inline-flex; align-items:center; gap:4px;
+  background:var(--cream); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
+  color:var(--forest); font-weight:700; font-size:.8rem; cursor:pointer; margin-bottom:12px; padding:7px 14px;
+  font-family:'Rubik',sans-serif;
+  }
+  .team-row .score{font-weight:700; color:var(--folkred);}
+  .btn-primary{background:var(--folkred); color:#fff; border:none; border-radius:12px; padding:10px 16px; font-size:.85rem; font-weight:700; cursor:pointer; width:100%; font-family:'Rubik',sans-serif;}
+  .btn-secondary{background:none; border:1px solid var(--night); color:var(--night); border-radius:12px; padding:8px 14px; font-size:.76rem; cursor:pointer; font-family:'Rubik',sans-serif;}
+  input.field{width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--line); font-family:'Rubik',sans-serif; font-size:.85rem; margin-bottom:8px;}
+  select.field{width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--line); font-family:'Rubik',sans-serif; font-size:.85rem; margin-bottom:8px; background:#fff; color:var(--ink);}
+  .exp-add-form{display:none;}
+  .exp-add-form.open{display:block;}
+  .exp-amount-row{display:flex; gap:8px;}
+  .exp-amount-row .field{flex:1;}
+  .exp-total-main{font-size:1.5rem; font-weight:900; color:var(--folkred); text-align:center; font-family:'Rubik',sans-serif;}
+  .curr-conv-trigger{width:100%; display:flex; align-items:center; justify-content:center; gap:6px; background:none; border:1px dashed var(--line); color:var(--muted); border-radius:10px; padding:9px 12px; font-size:.78rem; font-weight:600; font-family:'Rubik',sans-serif; cursor:pointer; margin-bottom:10px;}
+  .curr-conv-chevron{font-size:.8rem;}
+  .curr-conv-panel{margin-bottom:10px;}
+  #expAddToggleBtn{margin-bottom:10px;}
+  .curr-conv-row{display:flex; align-items:center; gap:8px;}
+  .curr-conv-row .field{flex:1;}
+  .curr-conv-eq{font-size:1rem; font-weight:700; color:var(--muted); flex:0 0 auto;}
+  .curr-conv-result{flex:1; font-size:1rem; font-weight:800; color:var(--folkred); background:oklch(97% 0.006 90); border:1px solid var(--line); border-radius:10px; padding:9px 12px; text-align:center;}
+  .curr-conv-note{font-size:.66rem; color:var(--muted); margin-top:6px;}
+  .weather-loading{font-size:.8rem; color:var(--muted); text-align:center; padding:6px 0;}
+  .weather-row{display:flex; gap:8px;}
+  .weather-spot{flex:1; text-align:center; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 6px;}
+  .ws-name{font-size:.72rem; font-weight:700; color:var(--ink); margin-bottom:4px;}
+  .ws-temp{font-size:1.3rem; font-weight:900; color:var(--folkred); font-family:'Rubik',sans-serif;}
+  .ws-text{font-size:.66rem; color:var(--muted); margin-top:2px;}
+  .weather-note{font-size:.64rem; color:var(--muted); text-align:center; margin-top:8px;}
+  .exp-total-sub{font-size:.68rem; color:var(--muted); text-align:center; margin-top:2px;}
+  .exp-log-header{display:flex; align-items:center; justify-content:space-between; margin:4px 0 12px; gap:6px;}
+  .exp-log-header .section-title{margin:0; flex:1;}
+  .exp-edit-toggle{background:#fff; border:1px solid var(--line); border-radius:8px; width:34px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); flex:0 0 auto;}
+  .exp-edit-toggle svg{width:15px; height:15px; display:block;}
+  .exp-edit-toggle.active{background:var(--folkred); border-color:var(--folkred); color:#fff;}
+  .exp-sync-status{display:flex; align-items:center; gap:6px; font-size:.72rem; color:var(--muted); margin:-4px 0 10px;}
+  .exp-sync-status .dot{width:7px; height:7px; border-radius:50%; background:#b9ad91; flex:0 0 auto;}
+  .exp-sync-status.synced .dot{background:var(--forest);}
+  .exp-sync-status.offline .dot{background:var(--folkred);}
+  .exp-date-sep{display:flex; justify-content:space-between; align-items:center; padding:14px 4px 6px; font-size:.78rem; font-weight:700; color:var(--night);}
+  .exp-date-sep:first-child{padding-top:2px;}
+  .exp-date-sep .exp-date-total{color:var(--folkred); font-weight:800;}
+  .exp-row-wrap{padding:0; overflow:hidden;}
+  .exp-row{display:flex; align-items:center; gap:10px; padding:12px 14px;}
+  .exp-row .exp-row-main{flex:1; min-width:0;}
+  .exp-row .exp-item{font-weight:700; font-size:.85rem; color:var(--night); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .exp-row .exp-meta{font-size:.7rem; color:var(--muted); margin-top:2px;}
+  .exp-amount-wrap{display:flex; align-items:center; gap:5px; flex:0 0 auto;}
+  .exp-amount-wrap .exp-amount{font-weight:700; color:var(--folkred); font-size:.86rem; white-space:nowrap;}
+  .exp-orig-toggle{background:none; border:none; color:var(--muted); cursor:pointer; padding:0; display:flex; align-items:center;}
+  .exp-orig-toggle svg{width:15px; height:15px;}
+  .exp-row .exp-delete{background:none; border:none; color:var(--muted); font-size:1rem; cursor:pointer; padding:0 2px; flex:0 0 auto;}
+  .exp-orig-detail{display:none; font-size:.72rem; color:var(--muted); padding:0 14px 10px; text-align:left; border-top:1px dashed var(--line); margin-top:0; padding-top:8px;}
+  .exp-orig-detail.open{display:block;}
+  .disclosure{font-size:.66rem; color:var(--muted); margin-top:6px; line-height:1.6;}
+  .empty{text-align:center; padding:26px 10px; color:var(--muted); font-size:.85rem;}
+  .optional-note{font-size:.72rem; color:var(--muted); margin:2px 0 10px;}
+
+  /* ===== place modal (bottom sheet) ===== */
+  .sheet-backdrop{
+  position:fixed; inset:0; background:rgba(17,23,44,.55); z-index:100; display:none;
+  justify-content:center; align-items:flex-end;
+  }
+  .sheet-backdrop.open{display:flex;}
+  .sheet{
+  width:100%; max-width:430px; background:var(--cream); border-radius:22px 22px 0 0;
+  max-height:84vh; overflow:hidden; animation:slideUp .28s ease; box-shadow:0 -10px 30px rgba(0,0,0,.3);
+  display:flex; flex-direction:column; position:relative;
+  }
+  @keyframes slideUp{from{transform:translateY(100%);} to{transform:translateY(0);}}
+  .sheet-hero{
+  position:relative; width:100%; height:210px; background:var(--night); overflow:hidden; flex:0 0 auto;
+  }
+  .hero-track{position:relative; height:100%; width:100%;}
+  .hero-track img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .35s ease; z-index:1;}
+  .hero-track img.active{opacity:1; z-index:2;}
+  .hero-dots{position:absolute; bottom:10px; left:50%; transform:translateX(-50%); display:flex; gap:5px; z-index:3;}
+  .hero-dot{width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.45); cursor:pointer;}
+  .hero-dot.active{background:#fff;}
+  .hero-loading{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--cream); font-size:.75rem; background:linear-gradient(135deg, var(--night) 0%, var(--forest) 100%);}
+  .hero-fallback{flex-direction:column; gap:8px; padding:20px; text-align:center;}
+  .hero-fallback .hf-emoji{font-size:2.2rem;}
+  .hero-fallback .hf-msg{font-size:.72rem; opacity:.85; max-width:260px; line-height:1.5;}
+  .hero-fallback .hf-retry{background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.4); color:#fff; border-radius:20px; padding:6px 14px; font-size:.72rem; font-weight:700; cursor:pointer; font-family:'Rubik',sans-serif;}
+  .hero-zoom-hint{position:absolute; top:10px; right:10px; width:26px; height:26px; border-radius:50%; background:rgba(17,23,44,.5); color:#fff; display:flex; align-items:center; justify-content:center; z-index:3; pointer-events:none;}
+  .hero-zoom-hint svg{width:13px; height:13px;}
+  .hero-track img{cursor:default;}
+
+  .lightbox-backdrop{position:fixed; inset:0; background:rgba(10,13,28,.94); z-index:300; display:none; align-items:center; justify-content:center;}
+  .lightbox-backdrop.open{display:flex;}
+  .lightbox-backdrop img{max-width:92vw; max-height:80vh; object-fit:contain; border-radius:8px;}
+  .lightbox-close{position:absolute; top:18px; left:18px; background:rgba(255,255,255,.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:1.1rem; cursor:pointer; z-index:2;}
+  .lightbox-nav-btn{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.15); border:none; color:#fff; width:42px; height:42px; border-radius:50%; font-size:1.4rem; cursor:pointer; z-index:2;}
+  .lightbox-nav-btn.prev{right:14px;}
+  .lightbox-nav-btn.next{left:14px;}
+
+  .video-chip{
+  display:inline-flex; align-items:center; justify-content:center; color:#fff; background:var(--folkred);
+  width:24px; height:24px; border-radius:7px; flex:0 0 auto; cursor:pointer;
+  }
+  .video-chip svg{width:12px; height:12px; display:block;}
+  .shop-toggle-btn{display:flex; align-items:center; gap:8px; width:100%; text-align:right; background:oklch(94% 0.03 185); color:var(--forest); border:1px solid oklch(85% 0.06 185); border-radius:12px; padding:11px 14px; margin-bottom:6px; cursor:pointer; font-family:'Rubik',sans-serif; font-size:.82rem; font-weight:700;}
+  .video-backdrop{position:fixed; inset:0; background:#000; z-index:300; display:none; align-items:center; justify-content:center;}
+  .video-backdrop.open{display:flex;}
+  .video-embed-wrap{width:100%; height:100%;}
+  .video-embed-wrap video, .video-embed-wrap iframe{width:100%; height:100%; object-fit:contain; border:0; display:block;}
+  .video-close{position:absolute; top:18px; left:18px; background:rgba(255,255,255,.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:1.1rem; cursor:pointer; z-index:2;}
+
+  .shopping-chip{background:oklch(94% 0.03 185) !important; border-color:oklch(85% 0.06 185) !important; color:var(--forest) !important;}
+  .shopping-list-panel{display:none; margin-top:10px; width:100%; background:oklch(97% 0.006 90); border:1px solid oklch(85% 0.06 185); border-radius:12px; padding:12px;}
+  .shopping-list-panel.open{display:block;}
+  .shl-title{font-weight:800; color:var(--forest); font-size:.8rem; margin-bottom:2px; line-height:1.4;}
+  .shl-subtitle{font-size:.68rem; color:var(--muted); margin-bottom:10px; line-height:1.5;}
+  .shl-section{margin-bottom:10px;}
+  .shl-section:last-child{margin-bottom:0;}
+  .shl-section-title{font-weight:700; color:var(--night); font-size:.76rem; margin-bottom:5px;}
+  .shl-item{display:flex; align-items:flex-start; gap:7px; padding:3px 0; cursor:pointer; font-size:.75rem; line-height:1.45;}
+  .shl-item input{margin-top:3px; flex:0 0 auto;}
+  .shl-item span.done{text-decoration:line-through; color:var(--muted);}
+  .sheet-close{position:absolute; top:14px; left:16px; background:rgba(17,23,44,.55); border:none; color:#fff; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; z-index:5;}
+  .sheet-header-plain{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:14px 20px 0; flex-wrap:wrap; flex:0 0 auto;}
+  .sheet-header-plain .phtitle{font-family:'Rubik',sans-serif; font-weight:900; font-size:1.15rem; color:var(--night); flex:1; min-width:0;}
+  .sheet-header-plain .phestablished{font-size:.72rem; color:var(--muted); width:100%;}
+  .sheet-actions{display:flex; align-items:center; gap:8px; flex:0 0 auto;}
+  .sheet-actions a, .sheet-actions button{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; text-decoration:none; cursor:pointer; flex:0 0 auto; padding:0;}
+  .sheet-actions svg{width:16px; height:16px; display:block;}
+  .sheet-actions a.gmaps{background:var(--night); color:#fff;}
+  .sheet-actions a.official{background:var(--amber); color:var(--night-deep);}
+  .sheet-actions button.video-link-btn{background:linear-gradient(135deg, var(--folkred) 0%, #c0392b 100%); color:#fff; box-shadow:0 3px 8px rgba(196,44,44,.35);}
+  .sheet-actions button.video-link-btn svg{margin-inline-start:2px;}
+  .sheet-body{padding:14px 20px 26px; flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .sheet-body h4{font-family:'Rubik',sans-serif; font-size:.86rem; color:var(--folkred); margin:0 0 5px;}
+  .sheet-body p{font-size:.88rem; line-height:1.6; margin:0 0 12px;}
+  .sheet-body .tip{background:oklch(97% 0.006 90); border:1px solid var(--line); border-inline-start:3px solid var(--folkred); border-radius:10px; padding:10px 12px; font-size:.8rem; margin-bottom:10px; color:var(--ink);}
+  .sheet-body .tip a{color:var(--folkred); font-weight:700; text-decoration:underline;}
+  .alt-stay-list{display:flex; flex-direction:column; gap:7px;}
+  .alt-stay-opt{background:#fff; border:1px solid var(--line); border-radius:9px; padding:8px 10px;}
+  .alt-stay-head{display:flex; justify-content:space-between; align-items:center; gap:8px; font-weight:700; font-size:.82rem;}
+  .alt-stay-mapicon{flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:22px; height:22px; color:var(--folkred);}
+  .alt-stay-mapicon svg{width:15px; height:15px;}
+  .alt-stay-meta{font-size:.68rem; color:var(--muted); margin-top:2px;}
+  .alt-stay-foot{display:flex; justify-content:space-between; align-items:center; margin-top:6px;}
+  .alt-stay-price{color:var(--folkred); font-weight:800; font-size:.85rem;}
+  .alt-stay-booklink{font-size:.68rem; color:var(--muted); text-decoration:underline;}
+  .alt-stay-note{font-size:.68rem; color:var(--muted); margin-top:2px;}
+  .sheet-body .tickets{background:var(--sage,oklch(94% 0.03 185)); border-radius:10px; padding:10px 12px; font-size:.8rem; margin-bottom:14px;}
+  .hours-chip{display:flex; align-items:center; gap:6px; font-size:.74rem; color:var(--muted); margin-bottom:12px;}
+  .hours-chip svg{width:14px; height:14px; flex:0 0 auto; color:var(--folkred);}
+  .route-map-wrap{position:relative; width:100%; aspect-ratio:600/440; background:#F3EEE2; border-radius:16px; overflow:hidden; margin-bottom:8px; box-shadow:var(--shadow); touch-action:pan-y;}
+  .route-map-canvas{position:absolute; top:0; left:0; width:600px; height:440px; transform-origin:0 0; will-change:transform;}
+  .route-map-bg{position:absolute; inset:0; width:100%; height:100%; display:block;}
+  .route-pin{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; cursor:pointer; padding:6px;}
+  .route-pin-dot{width:11px; height:11px; border-radius:50%; background:var(--folkred); border:2px solid #fff; box-shadow:0 0 0 2.5px oklch(62% 0.19 30 / .35); flex:0 0 auto;}
+  .route-pin-label{font-size:.56rem; font-weight:800; color:var(--ink); background:rgba(255,255,255,.85); padding:2px 5px; border-radius:5px; white-space:nowrap; line-height:1.3; box-shadow:0 1px 3px rgba(0,0,0,.15);}
+
+  .route-map-note{font-size:.66rem; color:var(--muted); margin-bottom:14px; line-height:1.5;}
+  .podcast-box{background:none; border:1px solid var(--line); border-radius:12px; padding:8px; margin-bottom:14px;}
+  .podcast-play{display:flex; align-items:center; gap:7px; background:var(--folkred); color:#fff; border:none; border-radius:20px; padding:8px 14px; font-size:.78rem; font-weight:700; cursor:pointer; margin-bottom:0; font-family:'Rubik',sans-serif;}
+  .podcast-play svg{width:15px; height:15px;}
+  .podcast-play.playing{background:var(--folkred); color:#fff;}
+  .podcast-text{color:var(--cream); font-size:.76rem; line-height:1.6; opacity:.85; margin:0;}
+
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <nav class="tabs">
+  <button data-screen="today" class="active"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg></span>לו״ז</button>
+  <button data-screen="romania"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4.2 5.8 4.2 9s-1.4 6.4-4.2 9c-2.8-2.6-4.2-5.8-4.2-9s1.4-6.4 4.2-9z"/></svg></span>רומניה</button>
+  <button data-screen="games"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg></span>משחקים</button>
+  <button data-screen="expenses"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6"/><path d="M9 12h6"/></svg></span>הוצאות</button>
+  </nav>
+
+  <main>
+
+  <!-- ===================== TODAY ===================== -->
+  <section class="screen active" id="screen-today">
+  <div id="welcomeVideoWrap"></div>
+  <div class="card daily-challenge-card" id="dailyChallengeWrap"></div>
+  <h2 class="section-title">לו״ז טיול משפחתי ברומניה</h2>  <div class="day-strip" id="dayStrip"></div>
+  <div id="stayBannerWrap"></div>
+  <div class="card" id="eventsWrap"></div>
+  </section>
+
+  <!-- ===================== ROMANIA ===================== -->
+  <section class="screen" id="screen-romania">
+  <h2 class="section-title">מזג אוויר עכשיו</h2>
+  <div class="card weather-block" id="weatherWrap"><div class="weather-loading">טוען תחזית...</div></div>
+
+  <div class="card podcast-card" id="introPodcastWrap"></div>
+
+  <h2 class="section-title">המסלול שלנו</h2>
+  <div class="route-map-wrap" id="routeMapWrap">
+  <div class="route-map-canvas" id="routeMapCanvas">
+  <svg class="route-map-bg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="600" height="440" fill="#F3EEE2"/>
+  <path d="M180,30 C260,15 340,25 400,55 C460,80 520,90 555,140
+  C580,175 575,220 545,245 C560,275 555,315 520,335
+  C500,375 460,405 410,415 C350,430 280,425 230,400
+  C180,415 120,405 90,365 C55,340 45,290 65,250
+  C40,215 45,165 80,130 C70,90 100,55 150,40 C160,35 170,32 180,30 Z"
+  fill="#CFE0C3" stroke="#B7CBA8" stroke-width="3"/>
+  <!-- decorative pine trees -->
+  <g fill="#6E9B6A" opacity=".8">
+  <g transform="translate(230,90)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(255,105) scale(.8)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(320,190) scale(.9)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(395,215) scale(.75)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  <g transform="translate(150,240) scale(.85)"><polygon points="0,-16 12,6 -12,6"/><polygon points="0,-6 10,14 -10,14"/><rect x="-2" y="14" width="4" height="7"/></g>
+  </g>
+  <!-- mountains (Carpathian arc) -->
+  <g opacity=".85">
+  <polygon points="255,150 285,95 315,150" fill="#A9B8A0"/>
+  <polygon points="278,120 285,105 292,120" fill="#F3EEE2"/>
+  <polygon points="330,175 360,120 390,175" fill="#9FAF96"/>
+  <polygon points="352,145 360,130 368,145" fill="#F3EEE2"/>
+  </g>
+  <!-- castle icon near Bran -->
+  <g transform="translate(500,180)" fill="var(--folkred)" opacity=".55">
+  <rect x="-18" y="-6" width="36" height="20"/>
+  <rect x="-18" y="-14" width="7" height="8"/>
+  <rect x="-4" y="-14" width="8" height="8"/>
+  <rect x="11" y="-14" width="7" height="8"/>
+  <polygon points="0,-30 -9,-14 9,-14"/>
+  </g>
+  <!-- bear icon near sanctuary -->
+  <g transform="translate(300,330)" fill="#8A5A3B" opacity=".55">
+  <circle cx="-10" cy="-16" r="6"/>
+  <circle cx="10" cy="-16" r="6"/>
+  <ellipse cx="0" cy="0" rx="20" ry="16"/>
+  </g>
+  </svg>
+  <button class="route-pin" style="left:32%; top:26%;" data-place="sibiu"><span class="route-pin-dot"></span><span class="route-pin-label">סיביו</span></button>
+  <button class="route-pin" style="left:37%; top:34%;" data-place="astra"><span class="route-pin-dot"></span><span class="route-pin-label">ASTRA</span></button>
+  <button class="route-pin" style="left:44%; top:23%;" data-place="balea"><span class="route-pin-dot"></span><span class="route-pin-label">אגם בלאה</span></button>
+  <button class="route-pin" style="left:40%; top:44%;" data-place="avrig"><span class="route-pin-dot"></span><span class="route-pin-label">עמק אבריג</span></button>
+  <button class="route-pin" style="left:46%; top:40%;" data-place="clay"><span class="route-pin-dot"></span><span class="route-pin-label">טירת החמר</span></button>
+  <button class="route-pin" style="left:37%; top:54%;" data-place="brambura"><span class="route-pin-dot"></span><span class="route-pin-label">Brambura</span></button>
+  <button class="route-pin" style="left:56%; top:52%;" data-place="bran"><span class="route-pin-dot"></span><span class="route-pin-label">בראן</span></button>
+  <button class="route-pin" style="left:63%; top:44%;" data-place="dino"><span class="route-pin-dot"></span><span class="route-pin-label">Dino Parc</span></button>
+  <button class="route-pin" style="left:68%; top:36%;" data-place="brasov"><span class="route-pin-dot"></span><span class="route-pin-label">בראשוב</span></button>
+  <button class="route-pin" style="left:66%; top:50%;" data-place="poianaBrasov"><span class="route-pin-dot"></span><span class="route-pin-label">פויאנה בראשוב</span></button>
+  <button class="route-pin" style="left:54%; top:64%;" data-place="bearSanctuary"><span class="route-pin-dot"></span><span class="route-pin-label">שמורת הדובים</span></button>
+  <button class="route-pin" style="left:68%; top:66%;" data-place="peles"><span class="route-pin-dot"></span><span class="route-pin-label">סינאיה</span></button>
+  <button class="route-pin" style="left:78%; top:86%;" data-place="airport"><span class="route-pin-dot"></span><span class="route-pin-label">שדה התעופה</span></button>
+  <button class="route-pin" style="left:70%; top:94%;" data-place="cismigiuHotel"><span class="route-pin-dot"></span><span class="route-pin-label">בוקרשט</span></button>
+  </div>
+  </div>
+
+  <h2 class="section-title">רומניה בקטנה</h2>
+  <div class="card culture-block" id="cultureWrap"></div>
+
+  <div id="phrasesSection">
+  <h2 class="section-title">כמה מילים ברומנית</h2>
+  <div class="card" id="phrasesWrap"></div>
+  <p class="optional-note">לחיצה על הרמקול משמיעה הגייה (תלוי בקול הזמין בדפדפן/מכשיר)</p>
+  </div>
+  </section>
+
+  <!-- ===================== GAMES ===================== -->
+  <section class="screen" id="screen-games">
+  <div class="games-menu" id="gamesMenu"></div>
+
+  <div class="game-panel" data-game="quiz">
+  <button class="games-back">‹ כל המשחקים</button>
+  <h2 class="section-title">חידון הדרך</h2>
+  <div class="card" id="quizWrap"></div>
+  </div>
+
+  <div class="game-panel" data-game="scavenger">
+  <button class="games-back">‹ כל המשחקים</button>
+  <h2 class="section-title">ציד המטמון המשפחתי</h2>
+  <p class="optional-note">חפשו את אלה לאורך הטיול — סמנו ברגע שמצאתם (ואם תרצו, גם צלמו!).</p>
+  <div class="card" id="scavengerWrap"></div>
+  </div>
+
+  <div class="game-panel" data-game="price">
+  <button class="games-back">‹ כל המשחקים</button>
+  <h2 class="section-title">ניחוש מחירים בלאו</h2>
+  <p class="optional-note">כמה זה עולה ברומניה בערך? המחירים משוערים — זה משחק, לא תג מחיר מדויק.</p>
+  <div class="card" id="priceGameWrap"></div>
+  </div>
+
+  <div class="game-panel" data-game="bingo">
+  <button class="games-back">‹ כל המשחקים</button>
+  <h2 class="section-title">בינגו הטיול</h2>
+  <p class="optional-note">סמנו כל דבר שראיתם. השלמת כל התשע מזכה בבונוס!</p>
+  <div class="card" id="bingoWrap"></div>
+  </div>
+
+  <div class="game-panel" data-game="board">
+  <button class="games-back">‹ כל המשחקים</button>
+  <h2 class="section-title">מי מכיר הכי טוב את רומניה?</h2>
+  <p class="optional-note">אפשר לשחק בכל המשחקים בלי שום הרשמה. הצטרפות ללוח הניקוד המשותף היא רשות בלבד — וכל הנקודות מכל המשחקים מצטברות אליו יחד.</p>
+  <div class="card" id="myTeamCard"></div>
+  <div id="leaderboardWrap"></div>
+  <p class="disclosure">הניקוד בלוח הזה משותף ונראה לכל מי שנכנס לאפליקציה הזו.</p>
+  </div>
+  </section>
+
+  <!-- ===================== EXPENSES ===================== -->
+  <section class="screen" id="screen-expenses">
+  <div class="card curr-conv-panel" id="currConvPanel">
+  <h2 class="section-title">המרת מטבע</h2>
+  <div class="curr-conv-row">
+  <input type="number" id="currConvInput" class="field" placeholder="סכום בלאו (RON)" style="margin-bottom:0;">
+  <span class="curr-conv-eq">=</span>
+  <div class="curr-conv-result" id="currConvResult">0 ₪</div>
+  </div>
+  </div>
+
+  <div class="card" id="expenseSummary"></div>
+
+  <button class="btn-primary" id="expAddToggleBtn">הוספת הוצאה</button>
+  <div class="card exp-add-form" id="expAddForm">
+  <input type="date" id="expDate" class="field">
+  <input type="text" id="expItem" class="field" placeholder="תיאור ההוצאה">
+  <select id="expCategory" class="field">
+  <option value="לינה">לינה</option>
+  <option value="אוכל">אוכל</option>
+  <option value="תחבורה">תחבורה</option>
+  <option value="אחר">אחר</option>
+  </select>
+  <div class="exp-amount-row">
+  <input type="number" id="expAmount" class="field" placeholder="סכום" inputmode="decimal">
+  <select id="expCurrency" class="field">
+  <option value="RON">לאו (RON)</option>
+  <option value="EUR">יורו (EUR)</option>
+  <option value="ILS">שקל (₪)</option>
+  <option value="USD">דולר (USD)</option>
+  </select>
+  </div>
+  <button class="btn-primary" id="addExpenseBtn">הוסיפו הוצאה</button>
+  </div>
+
+  <div class="exp-log-header">
+  <h2 class="section-title">יומן ההוצאות</h2>
+  <button class="exp-edit-toggle" id="expEditToggle" title="עריכה/מחיקה"></button>
+  </div>
+  <div class="exp-sync-status" id="expSyncStatus"></div>
+  <div id="expenseList"></div>
+  </section>
+
+
+  </main>
+</div>
+
+<!-- place detail bottom sheet -->
+<div class="sheet-backdrop" id="sheetBackdrop">
+  <div class="sheet" id="sheetContent"></div>
+</div>
+
+<!-- image lightbox (tap to enlarge) -->
+<div class="lightbox-backdrop" id="lightboxBackdrop">
+  <button class="lightbox-close" id="lightboxCloseBtn">✕</button>
+  <button class="lightbox-nav-btn prev" id="lightboxPrev">‹</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav-btn next" id="lightboxNext">›</button>
+</div>
+
+<!-- fullscreen video (tap a video-chip in the itinerary) -->
+<div class="video-backdrop" id="videoBackdrop">
+  <button class="video-close" id="videoCloseBtn">✕</button>
+  <div class="video-embed-wrap" id="videoEmbedWrap"></div>
+</div>
+
+<script>
+/* =========================================================
+  DATA LAYER
+  ========================================================= */
+const PLACES = {
+  arboreal:{
+  name:"Arboreal Retreat (Porumbacu Treehouse)", emoji:"",
+  kidsStory:"בית עץ אמיתי בתוך היער — ישנים בין הצמרות, שומעים ציפורים בבוקר, ויוצאים היישר לטבע כשפותחים את הדלת.",
+  practical:"בקתת עץ בורוֹמבַּקוּ דֶה סוּס, לרגלי הקרפטים, מוקפת יער וטבע שקט — הלינה הראשונה בטיול.",
+  tip:"מומלץ להגיע באור יום — הגישה היא דרך פתוחות כפריות.",
+  mapsQuery:"Arboreal Retreat Porumbacu de Sus",
+  gallery:["image001_5d5d7a22c8.jpg","image002_64e691f173.jpg","image003_1233f26169.jpg","image004_22b2d0a7f7.jpg","image005_77e859073e.jpg","image006_43b725432e.jpg","image007_03a42fe745.jpg"],
+  },
+  airport:{
+  name:"שדה התעופה אוטופני, בוקרשט", emoji:"",
+  kidsStory:"הרגע שבו רומניה מתחילה! יורדים מהמטוס, אוספים מזוודות, ומתחילים הרפתקה של שבוע שלם — מכאן הכול מתחיל ומכאן גם ניפרד בסוף.",
+  practical:"שדה התעופה הבינלאומי הראשי של בוקרשט (Henri Coandă / אוטופני). כאן נוחתים בלילה הראשון וגם עולים לטיסה חזרה ביום האחרון.",
+  tip:"איסוף המזוודות ושני הרכבים השכורים לוקח זמן בשעת לילה — כדאי לא למהר.",
+  mapsQuery:"Henri Coanda International Airport Bucharest",
+  video:"welcome-video.mp4",
+  gallery:["image008_595923b38c.webp","image009_e663a8c4b2.jpg","image010_4dad5f3333.webp"]
+  },
+
+  lidl:{
+  name:"סופרמרקט Lidl", emoji:"",
+  kidsStory:"עצירה מהירה למלא את המקרר לפני הבישולים והברבקיו — כל אחד יכול לבחור נשנוש אחד לדרך!",
+  practical:"רשת סופרמרקטים רומנית נפוצה, מקום נוח ומהיר להשלים מצרכים, בשרים לברבקיו וחטיפים לדרך.",
+  tip:"רשימת הקניות המומלצת מחכה בצ'אט של האירוע — קלות למצוא הכול מהר.",
+  mapsQuery:"Lidl Romania",
+  gallery:["image011_b960c518af.jpg","image012_674e319e7b.jpg"]
+  },
+
+  avrig:{
+  name:"עמק אבריג", emoji:"",
+  kidsStory:"נחל קטן וצונן שזורם ממש לצד הכביש — אפשר לשחק במים, לחפש אבנים חלקות ולראות דגים קטנים שוחים, ממש בתחילת ההרפתקה ברומניה!",
+  practical:"עמק ירוק לרגלי הקרפטים עם נחל קטן שזורם לצד הכביש הראשי. עצירת ההתאקלמות הראשונה אחרי טיסת הלילה.",
+  podcastScript:"שלום לכל המשפחה, וברוכים הבאים לרומניה! אנחנו עדיין עייפים מהטיסה, אבל תראו איפה עצרנו — עמק ירוק ושקט, עם הרים גבוהים מסביב שנקראים הקרפטים. יש כאן נחל קטן שזורם ממש לצד הכביש. המים בו קרים וצלולים, כי הם מגיעים ישר מההרים. שווה לגעת במים לרגע — זה מעיר ומרענן אחרי לילה שלם בטיסה. שימו לב לצבע הירוק העז מסביב: זה כי באזור הזה יורד הרבה גשם, ואז הכול פורח. בהמשך הדרך נמשיך צפונה, אל תוך ליבה של טרנסילבניה, האזור שבו נתחיל לפגוש טירות, יערות ואגדות. אבל בינתיים — קחו נשימה עמוקה של אוויר הררי נקי. ההרפתקה שלנו רק מתחילה!",
+  tip:"שווה לעצור ולהרטיב רגליים בנחל — מרעננן אחרי טיסת לילה.",
+  mapsQuery:"Avrig Romania",
+  video:"video-avrig.mp4",
+  gallery:["image013_948e107afd.webp"]
+  },
+  sibiu:{
+  name:"העיר העתיקה בסיביו", emoji:"",
+  established:"נוסדה במאה ה-12 על ידי מתיישבים גרמנים (סקסונים)",
+  kidsStory:"בעיר העתיקה יש גשר ברזל קטן שנקרא 'גשר השקרים' — האגדה אומרת שהוא מתחיל לחרוק אם מישהו משקר בזמן שהוא עומד עליו! ותסתכלו למעלה על הגגות — יש בהם חלונות קטנים ומשולשים שנראים כמו עיניים שצופות בעיר.",
+  practical:"כיכר פיאצה מארה (Piața Mare) היא הלב הפועם של העיר העתיקה — מוקפת בבתים צבעוניים, בתי קפה עם ישיבה בחוץ, ומגדל השעון של הכנסייה הלותרנית. שווה להמשיך לכיוון פיאצה מיקה (הכיכר הקטנה) כדי לראות את גשר השקרים.",
+  tip:"בשעות הערב הכיכר מוארת יפה ויש אווירה תוססת — זמן מצוין לגלידה או לשבת בבית קפה.",
+  mapsQuery:"Piata Mare Sibiu",
+  gallery:["image014_7950807e99.jpg","image015_a38a2286cd.jpg","image016_22c73ba22c.jpg","image017_5c4af0572a.jpg","image018_3e213c105b.jpg","image019_51b708d6ed.jpg","image020_115123f6e0.jpg"]
+  },
+  balea:{
+  name:"טרנספגרשן ואגם בלאה", emoji:"",
+  established:"הכביש נבנה ב-1970–1974, בתקופת השלטון הקומוניסטי",
+  kidsStory:"כביש מפותל שמטפס גבוה-גבוה אל תוך ההרים, עם עשרות סיבובים חדים ומנהרה ארוכה בתוך ההר. בסוף מחכה אגם קרח כחול-ירוק, שנוצר לפני אלפי שנים מקרחון שנמס!",
+  practical:"אחד הכבישים ההרריים המפורסמים בעולם — תוכנית הטלוויזיה הבריטית Top Gear כינתה אותו 'הכביש הכי טוב בעולם'. הוא מגיע לגובה של כ-2,042 מטר ליד אגם בלאה, אגם קרחוני שנמצא ממש בפסגה. יש שם דוכני מזכרות, פונדקים קטנים ואוויר הררי צונן גם באוגוסט.",
+  tip:"קחו סוודר גם בקיץ — למעלה קר יותר בהרבה מאשר למטה בעמק. הנסיעה כוללת המון סיבובים, אז מי שנוטה לבחילת נסיעה כדאי שייקח כדור מראש.",
+  mapsQuery:"Balea Lake Transfagarasan",
+  podcastScript:"תחגרו חגורות — עומדים לפנינו אחד הכבישים המסעירים בעולם. הכביש הזה נבנה לפני יותר מחמישים שנה, בעבודת כפיים קשה של חיילים שחפרו דרך בתוך ההר עצמו, כולל מנהרה ארוכה שעוברת מתחת לפסגה. הכביש מתפתל בעשרות סיבובים חדים, עולה גבוה יותר ויותר, עד שהעצים נעלמים ונשארים רק סלעים ושמיים. בתוכנית טלוויזיה בריטית מפורסמת על מכוניות, קראו לכביש הזה 'הכביש הכי טוב בעולם' — ועכשיו נבין למה. בפסגה, בגובה של יותר משני קילומטרים, מחכה לנו אגם כחול-ירוק מיוחד: הוא נוצר לפני אלפי שנים מקרחון ענק שהיה שם ונמס לאט לאט. גם באמצע הקיץ יהיה שם קריר, אז כדאי בגד חם. תסתכלו מסביב: זו אחת התצפיות היפות ביותר שנראה בכל הטיול."
+ ,
+  gallery:["image021_33971a2a6a.jpg","image022_39f298f378.jpg","image023_f635fc734f.jpg","image024_b8f3c0be80.jpg","image025_8cc9e22a0a.jpg","image026_dfbbc9c620.jpg"]
+  },
+  brambura:{
+  name:"Brambura Park", emoji:"",
+  kidsStory:"בית שבלבל את חוקי הכבידה — הולכים על התקרה, והספה, המיטה והטלוויזיה תלויות מעליכם! מצלמים תמונה והופכים את הטלפון.",
+  practical:"נפתח ב-10:00 בבוקר. במקום יש בית הפוך, גן שעשועים ענקי, מגלשות, פינת ליטוף עם אלפקות, וערסלים מוצלים. יש מסעדה ובית קפה צמודים.",
+  podcastScript:"תתכוננו למשהו מוזר — אנחנו בדרך לבית שכל כללי הכבידה בו הפוכים! ב-Brambura Park יש בית שבנוי כולו הפוך: התקרה למטה, והרצפה למעלה. כשנכנסים פנימה ומצלמים תמונה בזווית הנכונה, זה נראה בדיוק כאילו אתם הולכים על התקרה, והספה והטלוויזיה תלויות באוויר מעליכם! חוץ מהבית ההפוך, יש בפארק הזה גם אלפקות שאפשר ללטף, מגלשות ענקיות, וערסלים בצל העצים לנוח בהם. זו נקודת העצירה הראשונה שלנו אחרי הנחיתה ברומניה, אז זה מקום מושלם לרוץ, לצעוק, ולפרוק את כל האנרגיה שהצטברה בטיסה הארוכה. מי יגלה הכי מהר את הפינה המוזרה ביותר בפארק?",
+  tip:"כרטיסים נקנים בקופה בכניסה. מקום טוב לפרוק אנרגיה אחרי הנסיעה הארוכה משדה התעופה.",
+  mapsLink:"https://maps.app.goo.gl/5HpE9xqAdEc8E8Ae9?g_st=ic",
+  mapsQuery:"Brambura Park Romania",
+  officialLink:"https://bramburapark.ro/",
+  video:"video-brambura.mp4",
+  gallery:["image027_285c05968f.jpg","image028_a71c62feea.jpg","image029_639be550cd.jpg","image030_1bda3eec88.jpg"]
+  },
+  astra:{
+  name:"מוזיאון ASTRA", emoji:"",
+  established:"השורשים מ-1905, המוזיאון הפתוח כפי שהוא היום הוקם ב-1963",
+  kidsStory:"מוזיאון ענק תחת כיפת השמיים שמרגיש כמו כפר סתרים עתיק — בתי עץ, טחנות רוח על האגם, וכרכרות עם סוסים.",
+  practical:"מישורי לחלוטין ונגיש לעגלות ילדים. מומלץ סיבוב רגלי נינוח סביב האגם המרכזי. עשרות בתים היסטוריים אמיתיים שהובאו מכל רחבי רומניה.",
+  podcastScript:"דמיינו מוזיאון בלי קירות ובלי תקרה — מוזיאון שכולו יער, שבילים, ואגם גדול. זה מוזיאון ASTRA, ליד העיר סיביו. לפני הרבה שנים, אנשים החליטו לקחת בתים אמיתיים מכל רחבי רומניה — בתי עץ, טחנות רוח שמסתובבות ברוח, ובתי מלאכה ישנים — ולהעביר אותם, ממש להעביר פיזית, אל תוך היער הזה. כל בית מספר סיפור על משפחה שגרה בו לפני מאות שנים, ועל האופן שבו אנשים ברומניה חיו, עבדו וחגגו. אם תסתובבו לאורך האגם, אולי תראו כרכרות עם סוסים חולפות, ממש כמו פעם. זה כמו לצעוד אחורה בזמן, אבל תוך כדי טיול נעים בטבע.",
+  tip:"יש הרבה הליכה בשטח פתוח — נעליים נוחות יעזרו.",
+  mapsQuery:"ASTRA Museum Sibiu",
+  wikiTitle:"ASTRA Museum",
+  officialLink:"https://muzeulastra.ro/",
+  video:"video-astra.mp4",
+  gallery:["image031_7809deeb57.jpg","image032_dc6a8ceb86.jpg","image033_c78f1a57bc.jpg","image034_f35b1cfdc6.jpg","image035_3b6e27ab94.jpg"]
+  },
+  albota:{
+  name:"Albota Trout Farm", emoji:"",
+  kidsStory:"תופסים חכה, זורקים למים — ותופסים דג אמיתי! בריכות מים צלולות הזורמות מההרים ומלאות בדגי פורל.",
+  practical:"מקבלים חכות ופיתיונות במקום. הדגים שתדוגו יישקלו ויבושלו עבורכם לארוחת הצהריים. במקום גם מתחם שעשועים ומדשאות.",
+  podcastScript:"מוכנים לתפוס ארוחת צהריים בעצמכם? בחווה הזאת יש בריכות מים קרים וצלולים שזורמים ישר מההרים, ובתוכן שוחים דגי פורל — דג הררי טעים במיוחד. מקבלים חכה ופיתיון, מוצאים מקום שקט ליד המים, ומחכים בסבלנות. כשדג נתפס, זה רגע של התרגשות אמיתית לכל הגיל! מה שדגתם יישקל, ויבושל טרי ממש עבורכם לארוחת הצהריים של היום. חוץ מהדיג, יש כאן גם מדשאות ירוקות למשחק חופשי. זו הפסקה כפרית ורגועה, מהסוג שמזכיר שגם בטיול עמוס אפשר לפעמים פשוט לשבת, לחכות, ולתת לזמן לזרום — ממש כמו הנחל.",
+  tip:"ההזמנה אושרה מול המקום — שולחן ל-11 איש, ראשון 16/8 בשעה 13:30.",
+  mapsLink:"https://maps.google.com/?cid=1137472878104985164",
+  mapsQuery:"Albota Trout Farm Arpasu de Sus",
+  officialLink:"https://albota.ro/",
+  video:"video-albota.mp4",
+  gallery:["image036_ec2708162a.jpg","image037_2606a3f6e4.jpg","image038_8cfd559c35.jpg","image039_6b2cfd1875.jpg"]
+  },
+  lodge:{
+  name:"הווילה בבראן (The Lodge Transylvania)", emoji:"",
+  kidsStory:"בית עץ ענק בצורת משולש, עם גג מחודד שכמעט נוגע ברצפה — ובחוץ מחכים בריכה פרטית וג'קוזי חמים בין העצים!",
+  practical:"וילה מעץ בסגנון A-frame עם קירות זכוכית גבוהים, בריכה חיצונית, ג'קוזי ופרגולה מוצלת. שוכנת ביער שקט ליד בראן, מתאימה למשפחה שלמה.",
+  tip:"בערב הראשון בווילה מתוכנן ברבקיו משפחתי בחצר — שווה להגיע עם תיאבון!",
+  mapsQuery:"The Lodge Transylvania Bran",
+  mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9",
+  video:"video-magical-forest.mp4",
+  gallery:["image040_d8a9777f25.jpg","image041_6ca32b0316.jpg","image042_5b51271448.jpg","image043_7be6db7514.jpg","image044_95ece1c311.jpg","image045_000a17b544.jpg","image046_8644bd25c6.jpg","image047_9d1a0546ca.jpg"]
+  },
+  clay:{
+  name:"טירת החמר (Castelul de Lut)", emoji:"",
+  established:"נבנתה ונפתחה בסביבות שנת 2016",
+  kidsStory:"טירה שנבנתה כולה מבוץ, חמר, קש ועץ, בלי בטון בכלל. היא נראית בדיוק כמו הבית של הפיות מהאגדות.",
+  practical:"ביקור קצר וקליל (45–60 דקות). מצטלמים, עולים לצריחי העץ ויושבים ליד הנחל הצמוד.",
+  podcastScript:"תדמיינו שרציתם לבנות טירה, אבל בלי לבנים, בלי ברזל ובלי מלט. רק אדמה, חמר, קש ועץ — בדיוק כמו שאנשים בנו בתים לפני מאות שנים. זה בדיוק מה שמישהו עשה כאן: בנה טירה שלמה, עם צריחים וקומות, כולה מחומרים טבעיים שנלקחו מהאדמה מסביב. התוצאה נראית כאילו היא יצאה ישר מספר אגדות — צבעים חומים וזהובים, קירות מעוגלים, וצריחי עץ קטנים שאפשר לטפס עליהם. יש גם נחל קטן ליד הטירה, מקום נחמד לשבת ולנוח. זו עצירה קצרה בדרך, אבל אחת שממש שווה להאט בה ולהסתכל טוב טוב — ולשאול את עצמכם: איך בונים דבר כזה בלי שום כלי מודרני?",
+  tip:"מקום מצוין לצילומים — הצבעים משתנים לפי שעת היום.",
+  mapsQuery:"Castelul de Lut Valea Zanelor",
+  officialLink:"https://www.instagram.com/casteluldelut/"
+ ,
+  gallery:["image048_38a632252d.jpg","image049_ef1f1c1939.jpg","image050_f38746d68b.jpg"]
+  },
+  bran:{
+  name:"טירת בראן", emoji:"",
+  established:"נבנתה בין 1377–1388",
+  kidsStory:"טירה על צוק תלול עם מדרגות אבן מתפתלות, חדרים סודיים ומעברים חשאיים בין הקומות. היא הכי מפורסמת בעולם בזכות האגדה על הרוזן הערפד דרקולה — למרות שהוא כנראה בכלל לא באמת גר שם!",
+  practical:"מבצר מהמאה ה-14 העומד על צוק, עם נוף מרהיב על הרי הקרפטים. מזוהה בתרבות הפופולרית עם אגדת דרקולה, בזכות דמיון (רופף מבחינה היסטורית) לוולד המשולש.",
+  podcastScript:"אנחנו מתקרבים לטירה הכי מפורסמת בכל רומניה — טירת בראן. היא עומדת גבוה על צוק סלעי, עם צריחים חדים ומדרגות אבן שמתפתלות בין הקומות. הטירה נבנתה לפני יותר מ-600 שנה, בתקופה שבה עדיין לא היו מכוניות, חשמל, או אפילו נייר זכוכית לחלונות. בהמשך, סופר בשם בראם סטוקר כתב סיפור מפחיד על ערפד בשם דרקולה, וכשתיארו את הטירה שלו — אנשים חשבו מיד על בראן, כי היא נראית בדיוק כמו טירת אגדות אפלה. חשוב לדעת סוד קטן: אין שום הוכחה שדרקולה האמיתי בכלל ביקר כאן! זה סתם דמיון בין השמות. אבל זה לא מפריע — כי בפנים יש חדרים סודיים, מעברים נסתרים, ונוף עוצר נשימה על ההרים מסביב. תחפשו את המדרגה הכי צרה בטירה!",
+  tip:"באוגוסט יש תורים ארוכים — כדאי להגיע מוקדם בבוקר.",
+  hours:"בדרך כלל 09:00–19:00 באוגוסט (משתנה בעונות — לוודא מראש)",
+  ticketsInfo:"מומלץ לקנות כרטיסים מראש באתר הרשמי בעונת השיא.",
+  mapsQuery:"Bran Castle Romania",
+  wikiTitle:"Bran Castle",
+  gallery:[
+  "https://images.pexels.com/photos/5105467/pexels-photo-5105467.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "https://images.pexels.com/photos/29344476/pexels-photo-29344476.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "https://images.pexels.com/photos/30736792/pexels-photo-30736792.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "image051_0e3860dcd4.jpg",
+  "image052_98bbeea422.jpg",
+  "image053_7bcc955d69.jpg",
+  "image054_428328258a.jpg"
+  ],
+  officialLink:"https://www.bran-castle.com/"
+  },
+  brasov:{
+  name:"בראשוב העתיקה", emoji:"",
+  kidsStory:"כיכר גדולה ומלאה בבתים צבעוניים, ומעליה — על ההר — כתובת ענקית שכתוב עליה BRASOV, ממש כמו שלט הוליווד!",
+  practical:"פיאצה סְפָטוּלוּי (Piața Sfatului) היא הכיכר המרכזית של העיר העתיקה, מוקפת בבתים צבעוניים, בתי קפה עם ישיבה בחוץ וקניות. מכאן אפשר להמשיך לרחוב רפובליצ'י ההולכי.",
+  tip:"מקום נחמד לעצירת גלידה או שתייה קרה תוך כדי שיטוט.",
+  mapsQuery:"Piata Sfatului Brasov",
+  gallery:["image055_8290de9417.jpg","image056_9108500daf.jpg","image057_b88f3c8807.jpg"]
+  },
+  poianaBrasov:{
+  name:"פויאנה בראשוב (רכבל)", emoji:"",
+  kidsStory:"רכבל שמרים אתכם גבוה-גבוה עד לפסגת ההר, עם נוף פתוח על כל העמק והעיר למטה!",
+  practical:"תחנת הרכבל (Telecabina) עולה מפויאנה בראשוב, אתר סקי חורפי, אל פסגת הר פוסטאווארול. בקיץ פופולרי לטיולים קלים ותצפית.",
+  tip:"למעלה קריר יותר גם בקיץ — שווה סוודר קליל.",
+  mapsQuery:"Poiana Brasov cable car",
+  gallery:["image058_f2db227402.jpg","image059_2b5a794943.jpg","image060_4320b3bcc6.jpg"]
+  },
+  lipscani:{
+  name:"רחוב ליפסקני, בוקרשט", emoji:"",
+  kidsStory:"רחוב הולכי רגל תוסס עם בתי קפה, פסלים קטנים ברחוב ומוזיקה — הלב הפועם של העיר העתיקה בבוקרשט.",
+  practical:"רחוב מדרחוב במרכז ההיסטורי של בוקרשט, מלא בבתי קפה, מסעדות וחנויות בבניינים ישנים ומחודשים.",
+  tip:"נעים לשוטט בו בשעות אחר הצהריים/ערב, כשהמקום מתמלא באנשים.",
+  mapsQuery:"Lipscani Bucharest",
+  gallery:["image061_1132019ef7.jpg","image062_e77117f33b.jpg","image063_989b42b85a.jpg"]
+  },
+  cismigiuHotel:{
+  name:"Hotel Cismigiu, בוקרשט", emoji:"",
+  kidsStory:"הלינה האחרונה בטיול — מלון מפואר ממש בלב העיר, במרחק הליכה מהפארק הגדול ומהעיר העתיקה, לילה חגיגי לפני החזרה הביתה.",
+  practical:"מלון בוטיק במבנה היסטורי במרכז בוקרשט, קרוב לפארק צ'יסמיג'יו ולעיר העתיקה.",
+  tip:"חניון פרטי לרכבים במלון — שווה לוודא מקום מראש.",
+  mapsQuery:"Hotel Cismigiu Bucharest",
+  gallery:["image064_573f063ada.jpg","image065_655c63a7c0.jpg","image066_6e33b84c30.jpg"]
+  },
+  herastrau:{
+  name:"פארק הרסטראו, בוקרשט", emoji:"",
+  kidsStory:"פארק ענק מסביב לאגם, עם גשרים, מזרקות ומקום נהדר לרכיבה על אופניים או פשוט לרוץ בחופשיות.",
+  practical:"הפארק הגדול ביותר בבוקרשט, בנוי מסביב לאגם הרסטראו — שבילים, גנים, ומזרקות.",
+  tip:"מקום נעים לסיום טיול יום, גם רק להליכה קלילה סביב האגם.",
+  mapsQuery:"Herastrau Park Bucharest",
+  gallery:["image067_e5da3fa1eb.jpg","image068_3365eb0906.jpg","image069_1a059fccad.jpg"]
+  },
+  dino:{
+  name:"Dino Parc Râșnov", emoji:"",
+  established:"נפתח לציבור ב-2015",
+  kidsStory:"יער אמיתי שבו מסתתרים מעל 100 דינוזאורים בגודל טבעי שזזים ושואגים, כולל דגם ענקי של טי-רקס!",
+  practical:"מסלול הליכה מוצל וסלול הנגיש לעגלות, גני שעשועים, בתי עץ, וקולנוע 7D.",
+  podcastScript:"תעצרו לרגע ותקשיבו... שמעתם את זה? נשמע כמו שאגה מתוך היער! אנחנו נכנסים לפארק שבו יותר ממאה דינוזאורים בגודל אמיתי מסתתרים בין העצים. יש כאן טי-רקס ענק עם שיניים חדות, דינוזאורים עם צווארים ארוכים כמו של ג'ירפות, ואפילו כאלה עם קוצים חדים על הגב. הדינוזאורים לא באמת חיים כמובן — הם דגמים שזזים ומשמיעים קולות — אבל בתוך היער, עם הצללים ורעש העלים, ממש קל לדמיין שאתם מטיילים בעולם קדום. חוץ מהדינוזאורים יש כאן גם אתר חפירה שבו אפשר לחפש פוסילים כמו ארכיאולוגים אמיתיים. אז תשאלו את עצמכם: איזה דינוזאור הייתם הכי רוצים לפגוש — ואיזה דווקא לא?",
+  tip:"קחו מים — ההליכה בין הדינוזאורים יכולה לקחת שעתיים-שלוש.",
+  mapsQuery:"Dino Parc Rasnov",
+  officialLink:"https://dinoparc.ro/",
+  video:"video-afternoon-surprise.mp4"
+ ,
+  gallery:["image070_b737d18e03.jpg","image071_d2da8b2f28.jpg","image072_ab29334842.jpg","image073_c580a31d29.jpg","image074_63b057b7c9.jpg"]
+  },
+  bearSanctuary:{
+  name:"שמורת הדובים Libearty", emoji:"",
+  established:"נוסדה ב-2005",
+  kidsStory:"כאן חיים עשרות דובים חומים שכל אחד מהם ניצל ממקום שבו הוחזק בכלוב קטן. עכשיו יש להם יער ענק משלהם, עם בריכות, עצים לטפס עליהם ומקום לישון בשקט. המדריכים מספרים את הסיפור של כל דוב בשמו.",
+  practical:"שמורה בזרנשטי, כ-20 דקות נסיעה מבראן. הביקור הוא בסיור מודרך בלבד ובשעות קבועות — חובה להזמין מקום מראש דרך האתר. הסיור נמשך כשעה ורבע והוא רגלי, בשבילי יער.",
+  podcastScript:"בתוך יער אלונים ברומניה יש מקום שנקרא ליברטי — שמורת הדובים. הסיפור שלה מתחיל מדובה אחת שחיה שנים בכלוב קטן ליד מסעדה, כאטרקציה לתיירים. אישה בשם קריסטינה ראתה אותה, ולא הצליחה לשכוח. היא החליטה לעשות משהו. היום, השמורה הזאת היא בית לעשרות דובים חומים שכולם ניצלו ממקומות כאלה. לכל דוב יש שם, ולכל אחד יש סיפור. יש דובים שלא ידעו לשחות כשהגיעו, כי מעולם לא ראו מים עמוקים. יש כאלה שלקח להם חודשים להבין שאפשר פשוט ללכת, בלי קירות. כשמטיילים בשבילים של השמורה ורואים דוב מתפלש בבוץ או מטפס על עץ, קשה להאמין שפעם הוא לא יכול היה לזוז יותר משני צעדים. זה לא גן חיות — זה בית.",
+  tip:"חובה להזמין מראש באתר, יש שעות סיור קבועות. מומלץ נעליים סגורות.",
+  hours:"בקיץ בד\"כ יציאות סיור ב-09:15, 09:45, 10:45 ו-11:10 (שלישי-חמישי וסופ\"ש) — לוודא ולהזמין מראש את השעה המדויקת באתר הרשמי",
+  officialLink:"https://ampbears.ro/",
+  mapsQuery:"Libearty Bear Sanctuary Zarnesti",
+  gallery:["image075_f79542be59.webp","image076_8952edb5a9.jpg","image077_d025039435.jpg","image078_b1ee74e238.jpg"]
+  },
+  prejmer:{
+  name:"מבצר הכנסייה Prejmer", emoji:"",
+  established:"נבנה סביב המאה ה-13–15",
+  kidsStory:"מבצר ענק שבו כל הכפר יכול היה 'להתחבא' ביחד כשאויבים התקרבו — יש בו מנהרות, חדרי אחסון קטנים ומעברים צרים ומסתוריים שממש כיף לגלות ולטפס בהם.",
+  practical:"אחד המבצרים הכנסייתיים הגדולים והמשומרים ביותר באירופה — חומות עבות, מנהרות ומעברים סודיים שהיו מסתור לכל הכפר בזמן מצור.",
+  podcastScript:"לפני מאות שנים, כשצבא אויב התקרב לכפר קטן ברומניה, לתושבים לא היה לאן לברוח. אז הם עשו משהו חכם: הם בנו חומות ענקיות ועבות מסביב לכנסייה שלהם, ובתוך החומות בנו עשרות חדרים קטנים — אחד לכל משפחה בכפר. ברגע שאויב הופיע, כל הכפר, עם הילדים, בעלי החיים והאוכל, נכנס פנימה, סגר את השערים הכבדים, וחיכה בבטחה בפנים, לפעמים במשך ימים ארוכים. זה נקרא מבצר כנסייתי, וזה אחד הגדולים והשמורים ביותר שנשארו באירופה. היום אפשר לטייל בין המעברים הצרים, לטפס במדרגות עץ ישנות, ולדמיין איך זה היה לגור כאן, בתוך חומה שהייתה גם בית וגם מקום מסתור.",
+  tip:"תוספת מומלצת ליום קליל — מתאים מאוד לילדים לטפס ולחקור.",
+  mapsQuery:"Prejmer Fortified Church"
+ ,
+  gallery:["image079_20b8f0be85.jpg","image080_9f733b2ce3.jpg","image081_f302d05c7d.jpg"]
+  },
+  prejmerKarting:{
+  name:"Prejmer Raceway", emoji:"",
+  practical:"קארטינג מקצועי באוויר הפתוח — המסלול הגדול באזור, כ-20 דקות מבראשוב. גילאי 4-7: קארטינג זוגי עם הורה. גילאי 7+: נהיגה עצמאית. זמן מומלץ באתר: 1-2 שעות.",
+  hours:"א'-ה' 10:00–21:00 · ו'-ש' 10:00–22:00",
+  tip:"80–120 RON למקצה.",
+  mapsQuery:"Prejmer Raceway"
+  },
+  sergiana:{
+  name:"מסעדת Sergiana", emoji:"",
+  kidsStory:"יורדים לתוך מערת אבן מתחת לאדמה, כשמלצרים בתלבושות מסורתיות מגישים צלחות ענקיות של בשרים וצ'יפס.",
+  practical:"מסעדה אותנטית בבראשוב העתיקה. לקבוצה של 11 איש מומלץ להזמין פלטות בשרים מרכזיות לחלוקה.",
+  podcastScript:"בואו נרד יחד למרתף — ממש מתחת לרחובות בראשוב העתיקה, יש מסעדה שנראית כמו מערת אבן קסומה, עם קימורים אבן וקירות עתיקים. מלצרים לובשים בגדים מסורתיים רומניים, ומגישים צלחות ענקיות ומלאות בכל מיני בשרים על האש, נקניקיות, וצ'יפס תפוחי אדמה. זו לא ארוחה שקטה — יש כאן המולה נעימה, מוזיקה, וריחות טובים מכל הכיוונים. ברומניה, ארוחה משפחתית גדולה כזאת היא מסורת חשובה — לשבת יחד, לשתף מהצלחת של השני, ולדבר על כל מה שראינו היום. אז תרימו כפית, תטעמו קצת מהכול, ותספרו: מה היה השיא של היום עבורכם?",
+  tip:"ההזמנה אושרה מול המסעדה — שולחן ל-11 איש, שלישי 18/8 בשעה 18:30.",
+  mapsLink:"https://maps.google.com/?cid=15933378101089908357",
+  mapsQuery:"Sergiana Restaurant Brasov",
+  officialLink:"https://www.sergiana.ro/"
+ ,
+  gallery:["image082_82ab71417f.jpg","image083_2acf47d58e.jpg","image084_f8656dc7fa.jpg"]
+  },
+  peles:{
+  name:"ארמון פלש", emoji:"",
+  established:"נבנה בין 1873–1914 עבור המלך קרול הראשון",
+  kidsStory:"ארמון המלכים האמיתי של רומניה עם 160 חדרים, אולם שריוני אבירים וחרבות, ותיאטרון פרטי.",
+  practical:"בסגנון ניאו-רנסאנס גרמני, נחשב לאחד הארמונות המרשימים באירופה, עם אוסף אמנות של יותר מ-35,000 יצירות. הסיור בפנים מרשים, וגם הגנים החיצוניים מרהיבים.",
+  podcastScript:"לפני יותר ממאה וחמישים שנה, מלך רומניה הראשון, קרול הראשון, החליט לבנות לעצמו ארמון קיץ בין ההרים. הוא הביא אדריכלים מכל אירופה, ועבד על הארמון הזה במשך כמעט ארבעים שנה, עד שהוא הפך לאחד הארמונות המרהיבים בעולם — עם מאה ושישים חדרים! תוך כדי הסיור תראו אולם שלם עם שריונים וחרבות אמיתיים, תקרות מצוירות ביד, ואפילו תיאטרון פרטי קטן בתוך הארמון. דבר מדהים נוסף: הארמון הזה היה אחד הראשונים באירופה שהיה בו חשמל, מעלית, ואפילו שאיבת אבק מרכזית — הכל עוד לפני שהמצאות כאלה היו נפוצות בכלל. אז כשתסתובבו בין החדרים המוזהבים, תחשבו: איזה חדר הייתם בוחרים להיות החדר שלכם, אם הייתם חיים כאן?",
+  tip:"חובה כרטיסים מראש — כניסה מוגבלת ל-2,000 מבקרים ביום.",
+  hours:"סגור בשני ושלישי · רביעי 10:00–17:00 · חמישי-ראשון 09:15–17:00 (כניסה אחרונה חצי שעה לפני הסגירה)",
+  ticketsInfo:"כניסה בחלונות שעה קבועים, יש לרכוש מראש ל-11 איש.",
+  mapsQuery:"Peles Castle Sinaia",
+  wikiTitle:"Peleș Castle",
+  gallery:[
+  "https://images.pexels.com/photos/13334608/pexels-photo-13334608.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "https://images.pexels.com/photos/5651718/pexels-photo-5651718.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "https://images.pexels.com/photos/36049856/pexels-photo-36049856.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "https://images.pexels.com/photos/10833240/pexels-photo-10833240.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "image085_5997462cd8.jpg",
+  "image086_66870d80f4.jpg",
+  "image087_19b015e076.jpg"
+  ],
+  officialLink:"https://peles.ro/",
+  ticketsLink:"https://bilete.peles.ro/"
+  },
+  alpineCoasterSinaia:{
+  name:"Alpine Coaster Sinaia", emoji:"",
+  practical:"מסלול מזחלת הרים חדש ומודרני (נחנך בסוף 2025), יוצא מאזור Cota 1400 ויורד דרך היער לכיוון תחנת הגונדולה. אורך המסלול מעל 2 ק\"מ, ירידה של כ-5 דקות, מהירות מרבית כ-40 קמ\"ש. מומלץ לשלב עם ביקור בארמון פלש באותו יום.",
+  tip:"70 לאו לרכיבה. פעילות לאורך השנה, בהתאם לתנאי מזג האוויר.",
+  mapsQuery:"Alpine Coaster Sinaia"
+  },
+  caru:{
+  name:"Caru' cu Bere", emoji:"",
+  established:"פועלת מאז 1879",
+  kidsStory:"המסעדה הכי עתיקה בבוקרשט, עם ציורי קיר מוזהבים, ויטראז'ים, ורקדנים בתלבושות מסורתיות שמופיעים בזמן הארוחה.",
+  practical:"אווירה תוססת המתאימה למשפחות. מומלץ להזמין פפאנש (הקינוח הלאומי הרומני) לקינוח.",
+  podcastScript:"אנחנו נכנסים למסעדה שפועלת כבר יותר מ-140 שנה, בלב העיר העתיקה של בוקרשט. תרימו את הראש כשתיכנסו — התקרה מלאה בציורים צבעוניים, ויש חלונות זכוכית צבעונית שמזרקים אור בכל מיני צבעים על השולחנות. תוך כדי הארוחה, רקדנים בלבוש מסורתי רומני עולים לרחבה ומופיעים ממש ליד השולחנות. זה המקום המושלם לסיים בו את הטיול בבוקרשט, כי הוא מרגיש כמו חגיגה אמיתית. אל תשכחו להזמין פפאנש לקינוח — סופגנייה חמה עם שמנת וריבת דובדבנים, שנחשבת לקינוח הלאומי של רומניה. אז תרימו כוסית מיץ, תיהנו מהמוזיקה, ותחשבו לרגע כמה דברים מדהימים ראינו בשבוע הזה!",
+  tip:"ההזמנה אושרה מול המסעדה — שולחן ל-11 איש, חמישי 20/8 בשעה 19:00.",
+  mapsLink:"https://maps.google.com/?cid=12644265431698650570",
+  mapsQuery:"Caru cu Bere Bucharest",
+  officialLink:"https://www.carucubere.ro/"
+ ,
+  gallery:["image088_591d06ea5a.jpg","image089_aac2e60fea.jpg","image090_6c8fd2216f.jpg","image091_5f63c86eea.jpg","image092_c0139dd983.jpg"]
+  },
+  therme:{
+  name:"Therme Bucharest", emoji:"",
+  established:"נפתח לציבור ב-2016",
+  kidsStory:"פארק המים המקורה הגדול באירופה — מאות עצי דקל, בריכות גלים, מגלשות מים מהירות ובריכות חמות.",
+  practical:"מתחם Galaxy מיועד למשפחות וילדים.",
+  podcastScript:"הסיבוב האחרון בטיול הוא גם הכי רטוב! Therme בוקרשט הוא מתחם ענק ומקורה, מלא בבריכות חמות, מגלשות מים מהירות, ואלפי צמחים טרופיים אמיתיים — כאילו העתיקו חתיכה מהג'ונגל ושמו אותה מתחת לגג זכוכית ענק. בחוץ יכול להיות קר או גשום, אבל בפנים תמיד חם כמו בקיץ. יש כאן בריכת גלים שיוצרת גלים אמיתיים כמו בים, ומגלשות שגורמות לבטן להתהפך. זה מקום מושלם לסיים בו טיול ארוך ומלא — לפני שחוזרים לשדה התעופה, אפשר סוף סוף להירגע לגמרי, לצוף על הגב, ולחשוב על כל המקומות המדהימים שראינו ברומניה השבוע. איזה יעד היה הכי מפתיע עבורכם?",
+  tip:"כדאי להזמין אונליין מראש ולוודא מי מהמשפחה בכלל רוצה להיכנס.",
+  ticketsInfo:"יש חבילות משפחתיות (Smart Pass) שמוזילות את המחיר לקבוצה.",
+  mapsQuery:"Therme Bucharest",
+  officialLink:"https://therme.ro/",
+  gallery:["image093_c672c7a8d7.jpg","image094_b59cc0dc0f.jpg","image095_8ace5b408e.jpg","image096_e1f120b73b.jpg","image097_13579f95c4.jpg"]
+  }
+};
+
+const TRIP = {
+  flightDate: "2026-08-15T03:00:00",
+  days: [
+  {
+  id:"d1", date:"15/8/2026", weekday:"שבת",
+  title:"הגעה, עמק אבריג ופורומבאקו",
+  theme:[{icon:"",label:"נחיתה"},{icon:"",label:"עמק אבריג"},{icon:"",label:"פורומבאקו"}],
+  stay:{name:"Arboreal Retreat (Porumbacu Treehouse)", booked:true, mapsQuery:"Arboreal Retreat Porumbacu de Sus", placeId:"arboreal"},
+  events:[
+  {time:"03:00", txt:"נחיתה בשדה התעופה אוטופני (בוקרשט). איסוף מזוודות ושני הרכבים השכורים.", placeId:"airport"},
+  {time:"03:30", txt:"עייפים מדי להמשיך ישר לעמק אבריג? יש אופציה ללינה קרובה לשדה ולהמשך נסיעה למחרת (צ'ק-אין 14/8, צ'ק-אאוט 15/8).", optional:true, detail:"<div class='alt-stay-list'><div class='alt-stay-opt'><div class='alt-stay-head'><span>La Livada</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=str.%20Zborului%205%2C%20Otopeni%2C%20Romania' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>שלוש דירות · כניסה עצמאית · על המסלול</div><div class='alt-stay-foot'><span class='alt-stay-price'>546 ₪</span><a class='alt-stay-booklink' href='https://www.booking.com/hotel/ro/la-livada-otopeni.he.html' target='_blank' rel='noopener'>להזמנה בבוקינג</a></div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>North Suites Onix Pipera</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Drumul%20Nisipoasa%2046-52%2C%20Sector%201%2C%20Bucharest%2C%20Romania' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>דירוג 9.2/10 · סטייה של כ-15 דק' מהמסלול</div><div class='alt-stay-foot'><span class='alt-stay-price'>838 ₪</span><a class='alt-stay-booklink' href='https://www.booking.com/hotel/ro/gaia-apartment-onix-pipera.he.html' target='_blank' rel='noopener'>להזמנה בבוקינג</a></div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>Hilton Garden Inn Bucharest Airport</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Bd.%20Aeroportului%2013%2C%20Otopeni%2C%20Romania' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>5 חדרים · ממש מול השדה</div><div class='alt-stay-foot'><span class='alt-stay-price'>2,252 ₪</span><a class='alt-stay-booklink' href='https://www.booking.com/hotel/ro/hilton-garden-inn-bucharest-airport.he.html' target='_blank' rel='noopener'>להזמנה בבוקינג</a></div></div></div>"},
+  {time:"04:30", txt:"יציאה צפונה לעמק אבריג (כ-3.5 שעות דרך ערוץ נהר האולט).", placeId:"avrig"},
+  {time:"07:30", txt:"עצירת התרעננות בתחנת דלק (קפה, שוקו, מאפים)."},
+  {time:"08:30", txt:"הגעה לעמק אבריג, מנוחה ליד נחל אבריג.", placeId:"avrig"},
+  {time:"10:00", txt:"ביקור ב-Brambura Park — פארק הבית ההפוך (כ-10 דקות מהאזור בו נחים ליד נחל אבריג).", placeId:"brambura"},
+  {time:"13:30", txt:"קניות ב-Lidl Avrig (כ-15 דקות מברמבורה).", placeId:"lidl", shoppingListId:"lidlRasnov"},
+  {time:"14:00", txt:"צ'ק-אין ב-Arboreal Retreat (כ-10 דקות מה-Lidl).", placeId:"arboreal"},
+  {time:"ערב", txt:"ארוחת ערב עצמאית בבקתה — כדאי לקנות מראש ב-Lidl Avrig (13:30).", note:"אין צורך להזמין שולחן בשום מקום", placeId:"arboreal"}
+  ]
+  },
+  {
+  id:"d2", date:"16/8/2026", weekday:"ראשון",
+  title:"טרנספגרשן, אלבוטה, ASTRA וסיביו",
+  theme:[{icon:"",label:"טרנספגרשן"},{icon:"",label:"דיג באלבוטה"},{icon:"",label:"ASTRA וסיביו"}],
+  stay:{name:"Arboreal Retreat (Porumbacu Treehouse)", booked:true, mapsQuery:"Arboreal Retreat Porumbacu de Sus", placeId:"arboreal"},
+  events:[
+  {time:"09:30", txt:"יציאה מהבקתה — כ-10 דקות בלבד עד תחילת כביש הטרנספגרשן, ומשם עוד כשעה נסיעה בעלייה עד אגם בלאה (Bâlea Lake), עם עצירה בדרך לתצפית, מזכרות ואוויר הרים. בירידה צפונה (באותו אזור, בלי סטייה משמעותית) — עצירה קצרה נוספת במפל בליה (Cascada Bâlea).", placeId:"balea"},
+  {time:"13:30", txt:"ארוחת צהריים ב-Albota Trout Farm (כ-40 דקות ירידה מאגם בלאה).", note:"מאושר שולחן ל-11 איש", placeId:"albota"},
+  {time:"15:30", txt:"סיור רגלי במוזיאון הפתוח ASTRA Museum ליד סיביו (כ-30 דקות מאלבוטה).", placeId:"astra"},
+  {time:"18:00", txt:"טיול ערב בכיכר העיר העתיקה בסיביו (Piața Mare) — כ-15 דקות נסיעה מ-ASTRA.", placeId:"sibiu"},
+  {time:"19:30", txt:"ארוחת ערב בסיביו — כמה אופציות.", optional:true, detail:"<div class='alt-stay-list'><div class='alt-stay-opt'><div class='alt-stay-head'><span>Twenty Pizza</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Twenty%20Pizza%20Sibiu' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>פיצה מהתנור · אווירה קלילה, מנות גדולות ומחירים סבירים · הכי בטוח לילדים</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>La Turn</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=La%20Turn%20Sibiu' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>ממש בכיכר הגדולה (Piața Mare) · מטבח מודרני/בינלאומי עם נגיעה רומנית · תפריט מגוון לכל הגילאים</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>Benjamin Steakhouse & Bar</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Benjamin%20Steakhouse%20Sibiu' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>סטייקים והמבורגרים, מנות ילדים · אווירה חמימה, כ-2 דקות מהכיכר הגדולה</div></div></div><div class='alt-stay-note'>מומלץ להזמין שולחן מראש לקבוצה של 11.</div>"}
+  ]
+  },
+  {
+  id:"d3", date:"17/8/2026", weekday:"שני",
+  title:"טירת החמר ומעבר לבראן",
+  theme:[{icon:"",label:"טירת החמר"},{icon:"",label:"קניות ל-Râșnov"},{icon:"",label:"צ'ק-אין בבראן"}],
+  stay:{name:"The Lodge Transylvania (בראן)", booked:true, mapsQuery:"The Lodge Transylvania Bran", mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9", placeId:"lodge"},
+  events:[
+  {time:"09:30", txt:"ארוחת בוקר, צ'ק-אאוט וביקור ב-Castelul de Lut (טירת החמר/הפיות) — ממש בפורומבאקו דה סוס, כמה דקות מהבקתה.", placeId:"clay"},
+  {time:"11:00", txt:"נסיעה מזרחה לבראן (כ-1.5 שעות) + עצירת קניות גדולה ב-Lidl Râșnov (בשרים וציוד לווילה).", placeId:"lidl", shoppingListId:"lidlRasnov"},
+  {time:"14:00", txt:"צ'ק-אין ב-The Lodge Transylvania (כ-10 דקות מה-Lidl).", placeId:"lodge"},
+  {time:"אחה\"צ/ערב", txt:"מנוחה ורחצה בבריכה/ג'קוזי של הווילה, וערב ברבקיו משפחתי בחצר."}
+  ]
+  },
+  {
+  id:"d4", date:"18/8/2026", weekday:"שלישי",
+  title:"בראשוב העתיקה ודינו פארק",
+  theme:[{icon:"",label:"Dino Parc"},{icon:"",label:"בראשוב העתיקה"},{icon:"",label:"ערב ב-Sergiana"}],
+  stay:{name:"The Lodge Transylvania", booked:true, mapsQuery:"The Lodge Transylvania Bran", mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9", placeId:"lodge"},
+  events:[
+  {time:"בוקר", txt:"נסיעה קצרה מהווילה בבראן ל-Dino Parc Râșnov (כ-10 דקות) — פארק דינוזאורים ביער, שכולל גם מסלול הרפתקה בין הצמרות וזיפ-ליין בתוך הפארק עצמו. מומלץ להקדיש כ-2.5-3 שעות — זה כבר מכסה גם את חוויית ה'פארק חבלים' בלי צורך לנסוע למקום נוסף.", placeId:"dino"},
+  {time:"צהריים", txt:"מדרחוב בראשוב העתיקה (כ-15 דקות נסיעה מריישנוב).", placeId:"brasov"},
+  {time:"18:30", txt:"ארוחת ערב במסעדת Sergiana בבראשוב העתיקה (סניף Mureșenilor) — בהליכה מהמדרחוב.", note:"מאושר שולחן ל-11 איש", placeId:"sergiana"},
+  {time:"אופציונלי", txt:"ערב פנוי אחרי הארוחה — אפשר להאריך את הטיול ברחוב רפובליצ'י בבראשוב, או לחזור למנוחה בווילה.", optional:true, placeId:"lodge"}
+  ]
+  },
+  {
+  id:"d5", date:"19/8/2026", weekday:"רביעי",
+  title:"יום הילוך נמוך: דובים, טירת בראן ופויאנה בראשוב",
+  theme:[{icon:"",label:"שמורת הדובים"},{icon:"",label:"טירת בראן"},{icon:"",label:"רכבל פויאנה"}],
+  stay:{name:"The Lodge Transylvania", booked:true, mapsQuery:"The Lodge Transylvania Bran", mapsLink:"https://maps.app.goo.gl/L8MAytijHgqDJSKr9", placeId:"lodge"},
+  events:[
+  {time:"09:15", txt:"שמורת הדובים Libearty בזרנשטי — כ-20 דקות מהווילה.", optional:true, placeId:"bearSanctuary"},
+  {time:"11:00", txt:"תצפית וסיבוב רגוע ליד טירת בראן — כ-20 דקות מזרנשטי, בדרך חזרה לכיוון הווילה.", placeId:"bran"},
+  {time:"צהריים", txt:"נסיעה לפויאנה בראשוב (כ-25 דקות מבראן) ועלייה ברכבל לפסגה.", placeId:"poianaBrasov"},
+  {time:"13:30", txt:"ארוחת צהריים — כמה אופציות בפסגה או חזרה לווילה.", optional:true, detail:"<div class='alt-stay-list'><div class='alt-stay-opt'><div class='alt-stay-head'><span>Cabana Postavaru</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Cabana%20Postavaru%20Poiana%20Brasov' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>ממש ליד תחנת הרכבל העליונה · מרפסת ונוף פתוח על ההרים · המסעדה הכי פופולרית באזור הפסגה</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>Yager Chalet</span><a class='alt-stay-mapicon' href='https://www.google.com/maps/search/?api=1&query=Yager%20Chalet%20Poiana%20Brasov' target='_blank' rel='noopener' title='נווטו'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z'/><circle cx='12' cy='8.8' r='2.4'/></svg></a></div><div class='alt-stay-meta'>גם ממש ליד תחנת ההגעה של הרכבל · בר ומסעדה, אפשרות נוספת אם קאבנה פוסטוורו עמוסה</div></div><div class='alt-stay-opt'><div class='alt-stay-head'><span>לאכול בווילה</span></div><div class='alt-stay-meta'>לרדת ישר אחרי הרכבל בלי לעצור לארוחה, ולאכול צהריים רגוע בווילה בבראן — פחות זמן על ההר, יותר זמן בבריכה</div></div></div>"},
+  {time:"אופציונלי", txt:"מסלול קארטינג Prejmer Raceway — כ-20 דקות מבראשוב. אופציה טובה לילד בן ה-12 אם יש חשק לפעילות אקשן קצרה.", optional:true, placeId:"prejmerKarting"},
+  {time:"ערב", txt:"חזרה לווילה, בילוי בבריכה/ג'קוזי, וערב פרידה רגוע מההרים לפני שממשיכים לכיוון בוקרשט.", placeId:"lodge"}
+  ]
+  },
+  {
+  id:"d6", date:"20/8/2026", weekday:"חמישי",
+  title:"ארמון פלש, הגעה לבוקרשט וערב חגיגי",
+  theme:[{icon:"",label:"ארמון פלש"},{icon:"",label:"צ'ק-אין בוקרשט"},{icon:"",label:"ערב ב-Caru' cu Bere"}],
+  stay:{name:"Hotel Cismigiu, בוקרשט", booked:true, mapsQuery:"Hotel Cismigiu Bucharest", placeId:"cismigiuHotel"},
+  events:[
+  {time:"08:00", txt:"יציאה מוקדמת מבראן לכיוון בוקרשט.", placeId:"bran"},
+  {time:"09:30", txt:"סיור בארמון פלש בסינאיה — כשעה עד שעה וחצי נסיעה מבראן.", note:"חובה כרטיסים מראש באתר הרשמי", placeId:"peles"},
+  {time:"11:30", txt:"מזחלת ההרים Alpine Coaster Sinaia — ממש באותה עיר, בלי סטייה מהמסלול. מסלול חדש (2+ ק\"מ, כ-5 דקות רכיבה), 70 לאו לרכיבה.", placeId:"alpineCoasterSinaia"},
+  {time:"צהריים", txt:"הגעה לבוקרשט (כ-1.5-2 שעות מסינאיה), צ'ק-אין במלון Cismigiu וחניית 2 הרכבים בחניון הייעודי של המלון.", placeId:"cismigiuHotel"},
+  {time:"אחה\"צ", txt:"סיבוב רגלי ב-Lipscani (כ-10 דקות הליכה מהמלון).", placeId:"lipscani"},
+  {time:"אופציונלי", txt:"פארק הרסטראו.", optional:true, placeId:"herastrau"},
+  {time:"19:00", txt:"ארוחת ערב חגיגית ומופע פולקלור ב-Caru' cu Bere (כ-7 דקות הליכה מהמלון).", note:"מאושר שולחן ל-11 איש", placeId:"caru"}
+  ]
+  },
+  {
+  id:"d7", date:"21/8/2026", weekday:"שישי",
+  title:"יום פינוק בטרמה וטיסה חזרה",
+  theme:[{icon:"",label:"Therme Bucharest"},{icon:"",label:"טיסה חזרה"}],
+  stay:{name:"טיסה חזרה בערב — אין לינה", booked:true, noStay:true},
+  events:[
+  {time:"09:00", txt:"צ'ק-אאוט מ-Hotel Cismigiu והעמסת מזוודות.", placeId:"cismigiuHotel"},
+  {time:"09:30", txt:"נסיעה למתחם הספא Therme Bucharest (כ-25-30 דקות מהמלון).", note:"חובה להזמין כרטיסים אונליין מראש למתחם Galaxy!", placeId:"therme"},
+  {time:"צהריים", txt:"בריכות, מגלשות מים ורוגע בטרמה.", placeId:"therme"},
+  {time:"אופציונלי", txt:"קניות אחרונות בדרך לשדה — קניוני AFI Cotroceni או Băneasa Shopping City, שניהם בכיוון שדה התעופה.", optional:true},
+  {time:"17:45", txt:"הגעה לשדה התעופה (כ-35-40 דקות מהטרמה), החזרת שני הרכבים השכורים.", placeId:"airport"},
+  {time:"20:45", txt:"המראה — טיסה חזרה לישראל.", placeId:"airport"}
+  ]
+  }
+  ],
+
+  phrases: [
+  {ro:"Bună ziua", ph:"בּוּנֶה זִיוּאָה", he:"שלום (רשמי)"},
+  {ro:"Salut", ph:"סָאלוּט", he:"היי (לא רשמי)"},
+  {ro:"Mulțumesc", ph:"מוּלצוּמֵסק", he:"תודה"},
+  {ro:"Te rog", ph:"טֶה רוֹג", he:"בבקשה"},
+  {ro:"Da", ph:"דָה", he:"כן"},
+  {ro:"Nu", ph:"נוּ", he:"לא"},
+  {ro:"Cât costă?", ph:"קֶט קוֹסטָה?", he:"כמה זה עולה?"},
+  {ro:"Unde e toaleta?", ph:"אוּנדֶה יֶה טוֹאָלֶטָה?", he:"איפה השירותים?"},
+  {ro:"Delicios!", ph:"דֶלִיצְ׳יוֹס", he:"טעים!"},
+  {ro:"La revedere", ph:"לָה רֶוֶדֶרֶה", he:"להתראות"},
+  {ro:"Unu, doi, trei", ph:"אוּנוּ, דוֹי, טְרֵיי", he:"אחת, שתיים, שלוש"}
+  ],
+
+  culture:{
+  intro:"רומניה היא מדינה במזרח אירופה, עם שפה לטינית (קרובה לאיטלקית וספרדית!) למרות שהיא מוקפת שכנות סלאביות. אזור טרנסילבניה, שבו עובר רוב הטיול, ידוע בטירות, הרים ואגדות.",
+  crazyFacts:[
+  {emoji:"", title:"ארץ הדובים", text:"ברומניה חיים הכי הרבה דובים חומים באירופה (מחוץ לרוסיה)! מעל 6,000 דובים מסתובבים ביערות, ואפשר לעיתים לראות אותם לצד הכבישים בהרים."},
+  {emoji:"", title:"טירות של אגדות וערפדים", text:"בטרנסילבניה המציאו את הסיפור על דרקולה הערפד. הטירות נראות בדיוק כמו בסרטי אגדות — עם צריחים מחודדים, מעברים סודיים ונוף אלפיני."},
+  {emoji:"", title:"ארץ המאפים המתוקים", text:"הקינוח הלאומי הרומני הוא פפאנש (Papanași) — סופגנייה חמה וקריספית עם חור באמצע, מעליה כדור בצק קטן, והכל מוצף בשמנת חמוצה/מתוקה וריבת דובדבנים אדומה."}
+  ],
+  customs:[
+  "נהוג לומר שלום ותודה גם בחנות הקטנה ביותר — אדיבות מוערכת מאוד.",
+  "טיפ של כ-10% במסעדות מקובל ומצופה, גם אם לא תמיד רשום בחשבון.",
+  "כניסה לכנסיות דורשת כתפיים מכוסות — שווה תיק עם סווטשירט קליל.",
+  "רומנים גאים מאוד במורשת הכפרית והמסורתית שלהם — שאלות סקרניות מתקבלות בברכה."
+  ],
+  currency:{
+  name:"לאו רומני (RON)",
+  tips:"כרטיסי אשראי מתקבלים כמעט בכל מקום בערים, אבל שווה מזומן קטן לדוכנים כפריים ולשירותים ציבוריים. שער בערך: 1 ש\"ח ≈ 1.2 לאו (מומלץ לבדוק שער עדכני יום לפני הטיסה)."
+  }
+  }
+};
+
+/* =========================================================
+  QUIZ BANK — place quizzes + general culture quizzes
+  ========================================================= */
+const QUIZ_BANK = [
+  {id:"avrig", name:"עמק אבריג", emoji:"", q:"עמק אבריג נמצא לרגלי איזו שרשרת הרים?", options:["הקרפטים","האלפים","האורל"], correct:0},
+  {id:"balea", name:"טרנספגרשן", emoji:"", q:"איזו תוכנית טלוויזיה בריטית כינתה את הטרנספגרשן 'הכביש הכי טוב בעולם'?", options:["Top Gear","BBC News","Doctor Who"], correct:0},
+  {id:"brambura", name:"Brambura Park", emoji:"", q:"מה מיוחד ב-Brambura Park?", options:["יש בו 'בית הפוך'","הוא סגור לילדים","הוא נמצא מתחת לאדמה"], correct:0},
+  {id:"astra", name:"מוזיאון ASTRA", emoji:"", q:"מה מיוחד במוזיאון ASTRA?", options:["הוא נמצא מתחת לאדמה","בתים אמיתיים שהועברו לשם מכל רומניה","כל הבתים חדשים"], correct:1},
+  {id:"albota", name:"Albota Trout Farm", emoji:"", q:"מה עושים ב-Albota Trout Farm?", options:["גולשים בים","מטפסים על הר קרח","דגים פורלים בבריכות"], correct:2},
+  {id:"clay", name:"טירת החמר", emoji:"", q:"ממה בנויה טירת הפיות (Castelul de Lut)?", options:["מברזל בלבד","מחומרי בנייה טבעיים כמו חמר וקש","מקרח"], correct:1},
+  {id:"bran", name:"טירת בראן", emoji:"", q:"עם איזו דמות אגדית מזוהה טירת בראן?", options:["פיטר פן","אליס בארץ הפלאות","דרקולה"], correct:2},
+  {id:"dino", name:"Dino Parc", emoji:"", q:"היכן ממוקם Dino Parc Râșnov?", options:["באמצע העיר","בתוך יער אורנים","על ההר הגבוה ברומניה"], correct:1},
+  {id:"peles", name:"ארמון פלש", emoji:"", q:"עבור איזה מלך נבנה ארמון פלש?", options:["וולד המשולש","מיכאי הראשון","קרול הראשון"], correct:2},
+  {id:"therme", name:"Therme Bucharest", emoji:"", q:"מה מיוחד ב-Therme Bucharest?", options:["זה בריכה קטנה בבית מלון","אחד ממתחמי הוולנס המקורים הגדולים באירופה","זה פתוח רק בחורף"], correct:1},
+  {id:"c1", name:"רומניה", emoji:"", q:"מהי בירת רומניה?", options:["בראשוב","בוקרשט","סיביו"], correct:1},
+  {id:"c2", name:"רומניה", emoji:"", q:"לאיזו משפחת שפות שייכת הרומנית?", options:["הסלאבית","הלטינית (כמו איטלקית וספרדית)","הגרמאנית"], correct:1},
+  {id:"c3", name:"רומניה", emoji:"", q:"איך אומרים 'תודה' ברומנית?", options:["Mulțumesc","Salut","Cât costă"], correct:0},
+  {id:"c4", name:"רומניה", emoji:"", q:"איך קוראים למטבע הרומני?", options:["פורינט","לאו (RON)","זלוטי"], correct:1},
+  {id:"c5", name:"רומניה", emoji:"", q:"איזה אזור בטיול שלנו מפורסם בטירות ובאגדות?", options:["טרנסילבניה","דוברוג'ה","מולדובה"], correct:0},
+  {id:"c6", name:"רומניה", emoji:"", q:"לרומניה יש את האוכלוסייה הגדולה ביותר באירופה (מחוץ לרוסיה) של איזו חיה?", options:["דוב חום","זאב ערבות","ג'ירפה"], correct:0},
+  {id:"prejmer", name:"מבצר Prejmer", emoji:"", q:"מה היה תפקידו של מבצר הכנסייה Prejmer?", options:["מסתור לכל הכפר בזמן מצור","ארמון קיץ למלך","תחנת רכבת"], correct:0},
+  {id:"r1", name:"מי אני?", emoji:"", q:"אני טירה על צוק, מקושרת לאגדת ערפד מפורסמת. מי אני?", options:["ארמון פלש","מוזיאון ASTRA","טירת בראן"], correct:2},
+  {id:"r2", name:"מי אני?", emoji:"", q:"אני קינוח חם עם חור באמצע, מוגש עם שמנת וריבת דובדבנים. מי אני?", options:["פפאנש","גלידה","עוגת שוקולד"], correct:0},
+  {id:"r3", name:"מי אני?", emoji:"", q:"אני מתחם ענק עם דקלים ומגלשות מים, אבל אני בכלל לא בים — אני מקורה כולי. מי אני?", options:["Dino Parc","Therme Bucharest","ASTRA Museum"], correct:1},
+  {id:"r4", name:"מי אני?", emoji:"", q:"אני שפה שמדברים בה ברומניה, ודומה יותר לאיטלקית מאשר לשפות השכנות. מי אני?", options:["רומנית","הונגרית","בולגרית"], correct:0},
+  {id:"r5", name:"מי אני?", emoji:"", q:"אני מבצר ענק שבו כל הכפר יכול היה להסתתר יחד בזמן מצור. מי אני?", options:["טירת פלש","מבצר Prejmer","Brambura Park"], correct:1},
+  {id:"r6", name:"מי אני?", emoji:"", q:"אני חיה חומה וגדולה, ויש הכי הרבה ממני ביערות רומניה מכל מדינה אחרת באירופה (חוץ מרוסיה). מי אני?", options:["זאב","דוב חום","צבי"], correct:1}
+];
+
+const SCAVENGER_ITEMS = [
+  {id:"sc1", emoji:"", text:"עגלה רתומה לסוס"},
+  {id:"sc2", emoji:"", text:"טירה עם צריח מחודד"},
+  {id:"sc3", emoji:"", text:"פרה או סוס בשדה פתוח"},
+  {id:"sc4", emoji:"", text:"מישהו אוכל פפאנש"},
+  {id:"sc5", emoji:"", text:"דגל רומני מתנופף"},
+  {id:"sc6", emoji:"", text:"כלב רחוב ידידותי"},
+  {id:"sc7", emoji:"", text:"רקמה עממית אדומה — על בגד, מפה או קיר"},
+  {id:"sc8", emoji:"", text:"קן ציפור גדול על עמוד או ארובה"}
+];
+
+const PRICE_ITEMS = [
+  {id:"pg1", emoji:"", item:"קפה הפוך בבית קפה", options:["8–10 לאו","12–16 לאו","30–35 לאו"], correct:1},
+  {id:"pg2", emoji:"", item:"כדור גלידה אחד", options:["5–7 לאו","9–12 לאו","20 לאו"], correct:1},
+  {id:"pg3", emoji:"", item:"מנת פפאנש במסעדה", options:["8–12 לאו","20–28 לאו","55 לאו"], correct:1},
+  {id:"pg4", emoji:"", item:"בקבוק מים קטן במכולת", options:["2–4 לאו","9–11 לאו","18 לאו"], correct:0},
+  {id:"pg5", emoji:"", item:"כרטיס כניסה למבוגר לטירת בראן", options:["10–15 לאו","40–50 לאו","95 לאו"], correct:1},
+  {id:"pg6", emoji:"", item:"נסיעת מונית קצרה בעיר", options:["5–8 לאו","15–25 לאו","70 לאו"], correct:1}
+];
+
+const BINGO_ITEMS = [
+  {id:"bg1", emoji:"", text:"סוס"},
+  {id:"bg2", emoji:"", text:"טירה"},
+  {id:"bg3", emoji:"", text:"פפאנש"},
+  {id:"bg4", emoji:"", text:"דגל"},
+  {id:"bg5", emoji:"", text:"תמונה/שלט של דוב"},
+  {id:"bg6", emoji:"", text:"פסגת הר בעננים"},
+  {id:"bg7", emoji:"", text:"כביש הררי מתפתל"},
+  {id:"bg8", emoji:"", text:"כנסייה עם צריח"},
+  {id:"bg9", emoji:"", text:"גלידה"}
+];
+
+const DAILY_CHALLENGES = {
+  d1:{emoji:"", text:"למדו ותרגלו יחד 3 מילים חדשות ברומנית עד הערב", actionScreen:"romania", actionAnchor:"phrasesSection", actionLabel:"למילים ברומנית"},
+  d2:{emoji:"", text:"מי שדג (או ניסה!) יספר איך זה הרגיש בארוחת הערב"},
+  d3:{emoji:"", text:"צלמו תמונה משפחתית משותפת מול טירת החמר"},
+  d4:{emoji:"", text:"כל אחד יבחר את הדינוזאור האהוב עליו ויסביר למה"},
+  d5:{emoji:"", text:"תארו במילה אחת את ההרגשה מהנוף בטירת בראן"},
+  d6:{emoji:"", text:"גלו יחד עובדה מפתיעה אחת על ארמון פלש ושתפו בארוחת הערב"},
+  d7:{emoji:"", text:"כל אחד יגיד דבר אחד שהכי אהב בטיול לרומניה"}
+};
+
+const SHOPPING_LISTS = {
+  lidlRasnov:{
+  title:"רשימת קניות מומלצת לסופר (מחושבת ל-11 נפשות בווילה)",
+  subtitle:"מותאמת לשהייה בווילה בבראן (כולל ערב הברבקיו ביום שני והשלמות לארוחות בוקר ונשנושים)",
+  sections:[
+  {emoji:"", title:"לבשרים וברבקיו (ערב יום שני)", items:[
+  "בשרים על האש: כ-2.5–3 ק\"ג בשר (מיקס של חזה עוף/פרגיות, סטייקים/צלעות, ומיצ'י - Mititei, הקבב הרומני המעולה)",
+  "נקניקיות לילדים: 1–2 חבילות נקניקיות איכותיות",
+  "פחמים וציוד הדלקה: שקית פחמים גדולה (Cărbuni) + נוזל/קוביות הדלקה"
+  ]},
+  {emoji:"", title:"מאפים, פחמימות וארוחות בוקר", items:[
+  "לחם/לחמניות: 2–3 כיכרות לחם כפרי/לחמניות טריות",
+  "גבינות: חבילת צהובה/גאודה, פילדלפיה/גבינה לבנה למריחה, וגבינת טלמיצה (Telemea - הגבינה המקומית המלוחה)",
+  "ביצים: תבנית של 20–30 ביצים (לשקשוקה/חביתות בבוקר)",
+  "יוגורט/חלב: 2 ליטר חלב + יוגורטים/מעדנים לילדים"
+  ]},
+  {emoji:"", title:"ירקות, פירות ונשנושים", items:[
+  "ירקות לבלקני/סלט: עגבניות (3 ק\"ג), מלפפונים (2 ק\"ג), פלפלים, בצל וירק (פטרוזיליה/כוסברה)",
+  "ירקות לצלייה: חצילים/קישואים/פטריות לברבקיו",
+  "פירות העונה: אבטיח ענק, ענבים, אפרסקים/שזיפים",
+  "נשנושים לילדים ולנסיעות: חטיפים מלוחים, עוגיות, תפוחים/בננות"
+  ]},
+  {emoji:"", title:"שתייה ותבלינים", items:[
+  "מים מינרליים (חובה!): 3–4 שישיות מים ללא גז (Apă Plată) — מים מהברז פחות מומלצים לשתייה מרובה",
+  "שתייה קלה: מיצים, קולה/סודות לפי הטעם",
+  "אלכוהול (למבוגרים): בירות מקומיות (Ursus/Timișoreana) או יין טרנסילבני",
+  "תבלינים ורטבים: מלח, פלפל, שמן זית/קנולה, קטשופ, חרדל (Mustar - חובה ליד המיצ'י!), ומיונז",
+  "חד-פעמי וציוד: נייר סופג, ניילון נצמד/אלומיניום, שקיות אשפה, וטבליות למדיח/נוזל כלים (אם חסר בווילה)"
+  ]}
+  ]
+  }
+};
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+  const j = Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+/* =========================================================
+  STATE
+  ========================================================= */
+function parseDayDate(d){
+  const [dd,mm,yyyy] = d.date.split('/').map(Number);
+  return new Date(yyyy, mm-1, dd);
+}
+function isPastDay(d){
+  const dayEnd = new Date(parseDayDate(d).getTime());
+  dayEnd.setDate(dayEnd.getDate()+1);
+  return new Date() >= dayEnd;
+}
+function getDefaultDayId(){
+  const upcoming = TRIP.days.find(d=>!isPastDay(d));
+  return upcoming ? upcoming.id : TRIP.days[TRIP.days.length-1].id;
+}
+
+let selectedDay = getDefaultDayId();
+let myProgress = new Set();
+let myTeam = null;
+let quizOrder = shuffle(QUIZ_BANK);
+
+const mapsUrl = (q)=>"https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+const placeMapsLink = (p)=> p.mapsLink || mapsUrl(p.mapsQuery || p.name);
+
+/* =========================================================
+  HEADER + ROUTE
+  ========================================================= */
+/* =========================================================
+  TODAY
+  ========================================================= */
+// short route label per day, shown under each stop in the journey strip
+const DAY_STRIP_LOC = {
+  d1:"עמק אבריג", d2:"טרנספגרשן וסיביו", d3:"טירת החמר ← בראן", d4:"בראשוב",
+  d5:"בראן ופויאנה", d6:"פלש ← בוקרשט", d7:"טרמה הביתה"
+};
+function renderDayStrip(){
+  const wrap = document.getElementById('dayStrip');
+  wrap.innerHTML = TRIP.days.map((d,i)=>`
+  <button class="day-chip ${d.id===selectedDay?'active':''} ${isPastDay(d)?'past':''}" data-day="${d.id}">
+  <span class="dot">${i+1}</span>
+  <b>${d.weekday} ${d.date.split('/')[0]}/${d.date.split('/')[1]}</b>
+  <span class="dloc">${DAY_STRIP_LOC[d.id]||''}</span>
+  </button>
+  `).join('');
+  wrap.querySelectorAll('.day-chip').forEach(el=>{
+  el.onclick = ()=>{ selectedDay = el.dataset.day; renderToday(); };
+  });
+  // center the current day only on first paint; re-centering after every tap
+  // made the strip jump around while the user was interacting with it.
+  if(!renderDayStrip._scrolled){
+  renderDayStrip._scrolled = true;
+  const act = wrap.querySelector('.day-chip.active');
+  if(act) act.scrollIntoView({inline:'center', block:'nearest'});
+  }
+}
+
+function renderToday(){
+  renderDayStrip();
+  renderDailyChallenge();
+  const day = TRIP.days.find(d=>d.id===selectedDay);
+  document.getElementById('welcomeVideoWrap').innerHTML = '';
+  const stayInner = `
+  <span class="stay-text">לינה: ${day.stay.name}${!day.stay.booked ? ' <span class="tbd">טרם הוזמן</span>' : ''}</span>
+  `;
+  const themeChips = (day.theme && day.theme.length) ? `<div class="day-theme">${day.theme.map(t=>`<span class="theme-chip">${t.icon} ${t.label}</span>`).join('')}</div>` : '';
+  document.getElementById('stayBannerWrap').innerHTML = day.stay.noStay
+  ? `<div class="stay-banner">${stayInner}</div><h2 class="section-title">${day.title}</h2>${themeChips}`
+  : `<div class="stay-banner tappable" id="stayBannerBtn">${stayInner}</div><h2 class="section-title">${day.title}</h2>${themeChips}`;
+  const sbb = document.getElementById('stayBannerBtn');
+  if(sbb && day.stay.placeId){
+  sbb.onclick = ()=> openPlaceSheet(day.stay.placeId);
+  }
+
+  document.getElementById('eventsWrap').innerHTML = day.events.map((e,idx)=>{
+  const optClass = e.optional ? ' optional' : '';
+  const optBadge = e.optional ? '<span class="opt-badge">הצעה</span>' : '';
+  const noteChip = e.note ? `<span class="note">${e.note}</span>` : '';
+  const videoChip = e.video ? `<span class="video-chip-label">סרטון פתיחה</span>` : '';
+  const meta = [noteChip, videoChip].filter(Boolean).join('');
+  return `
+  <div class="event${optClass} tappable" data-day="${day.id}" data-idx="${idx}" ${e.placeId?`data-place="${e.placeId}"`:''} ${e.shoppingListId?`data-shop="${e.shoppingListId}"`:''}>
+  <div class="time">${e.time}</div>
+  <div class="txt">
+  ${e.txt} ${optBadge}
+  ${meta ? `<div class="event-meta">${meta}</div>` : ''}
+  </div>
+  <span class="event-chevron">${MORE_SVG}</span>
+  </div>`;
+  }).join('');
+
+  // whole row opens a drawer: rich place sheet when we have one, generic event sheet otherwise.
+  document.querySelectorAll('.event.tappable').forEach(row=>{
+  row.onclick = ()=>{
+  if(row.dataset.place) openPlaceSheet(row.dataset.place, row.dataset.shop || null);
+  else openEventSheet(row.dataset.day, parseInt(row.dataset.idx));
+  };
+  });
+}
+
+function renderShoppingPanel(listId){
+  const data = SHOPPING_LISTS[listId];
+  if(!data) return '';
+  const checked = JSON.parse(localStorage_safe_get('shop-checked-'+listId) || '[]');
+  let html = `<div class="shopping-list-panel" id="shop-${listId}">
+  <div class="shl-title">${data.title}</div>
+  <div class="shl-subtitle">${data.subtitle}</div>`;
+  data.sections.forEach((sec, si)=>{
+  html += `<div class="shl-section"><div class="shl-section-title">${sec.emoji} ${sec.title}</div>`;
+  sec.items.forEach((item, ii)=>{
+  const key = `${si}-${ii}`;
+  const isChecked = checked.includes(key);
+  html += `<label class="shl-item"><input type="checkbox" data-key="${key}" data-list="${listId}" ${isChecked?'checked':''}><span class="${isChecked?'done':''}">${item}</span></label>`;
+  });
+  html += `</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+/* =========================================================
+  PLACE DETAIL SHEET (modal)
+  ========================================================= */
+const PIN_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12.2A7 7 0 0 0 5 8.8C5 13.8 12 21 12 21z"/><circle cx="12" cy="8.8" r="2.4"/></svg>`;
+const CLOCK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>`;
+const ZOOM_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M10.5 8v5M8 10.5h5"/></svg>`;
+const PLAY_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>`;
+const PENCIL_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>`;
+const SYNC_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-15.3 6.4L3 16"/><path d="M3 12a9 9 0 0115.3-6.4L21 8"/><path d="M3 21v-5h5"/><path d="M21 3v5h-5"/></svg>`;
+const INFO_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.7" r="0.6" fill="currentColor"/></svg>`;
+const MORE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>`;
+
+
+/* =========================================================
+  EMBEDDED MEDIA
+  Videos and audio are base64-embedded below so the app is a single
+  self-contained file. They are decoded lazily, on first play, into
+  Blob URLs rather than used as data: URIs — mobile browsers cap the
+  length of a data: URI on <video>/<audio>, which is what silently
+  broke playback before. Blob URLs have no such limit.
+  If a file is missing from MEDIA we fall back to the plain filename,
+  so a folder-based deploy (Vercel) still works unchanged.
+  ========================================================= */
+const MEDIA = {};
+const MEDIA_URL_CACHE = {};
+function mediaUrl(name){
+  if(MEDIA_URL_CACHE[name]) return MEDIA_URL_CACHE[name];
+  const entry = MEDIA[name];
+  if(!entry) return name;
+  try{
+  const bin = atob(entry.b64);
+  const len = bin.length;
+  const bytes = new Uint8Array(len);
+  for(let i=0;i<len;i++) bytes[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([bytes], {type: entry.type}));
+  MEDIA_URL_CACHE[name] = url;
+  return url;
+  }catch(e){
+  console.error('media decode failed for', name, e);
+  return name;
+  }
+}
+
+/* ===== fullscreen video (tap a video-chip to open) ===== */
+function youtubeEmbedUrl(url){
+  const watchMatch = url.match(/[?&]v=([^&]+)/);
+  const shortMatch = url.match(/youtu\.be\/([^?&]+)/);
+  const embedMatch = url.match(/youtube\.com\/embed\/([^?&]+)/);
+  const id = (watchMatch && watchMatch[1]) || (shortMatch && shortMatch[1]) || (embedMatch && embedMatch[1]);
+  return id ? `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0` : url;
+}
+function driveEmbedUrl(url){
+  const idMatch = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
+  const id = idMatch ? idMatch[1] : null;
+  return id ? `https://drive.google.com/file/d/${id}/preview` : url;
+}
+function driveDirectUrl(url){
+  const idMatch = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
+  const id = idMatch ? idMatch[1] : null;
+  return id ? `https://drive.google.com/uc?export=download&id=${id}` : url;
+}
+function videoEmbedType(src){
+  if(/youtube\.com|youtu\.be/.test(src)) return 'youtube';
+  if(/drive\.google\.com/.test(src)) return 'drive';
+  return 'file';
+}
+function attachMediaFallback(el, name){
+  // Playback fallback chain: blob URL -> data: URI -> plain filename -> visible error.
+  // Blob is the normal path; data: covers sandboxed viewers whose CSP blocks blob:;
+  // the plain filename covers server deploys. The final message must be readable on
+  // ANY background (it sits on the dark video overlay OR on a light card), so it
+  // carries its own light box styling instead of assuming a dark backdrop.
+  const tried = { data:false, file:false };
+  el.addEventListener('error', ()=>{
+  if(!tried.data && MEDIA[name]){
+  tried.data = true;
+  el.src = 'data:' + MEDIA[name].type + ';base64,' + MEDIA[name].b64;
+  el.load();
+  if(el.play) el.play().catch(()=>{});
+  return;
+  }
+  if(!tried.file && !el.src.endsWith(name)){
+  tried.file = true;
+  el.src = name;
+  el.load();
+  return;
+  }
+  const code = el.error ? el.error.code : '?';
+  const msg = document.createElement('div');
+  msg.style.cssText = 'background:#fff; color:var(--ink); border:1px solid var(--line); border-inline-start:3px solid var(--folkred); border-radius:12px; text-align:center; padding:14px 16px; font-size:.8rem; line-height:1.6; direction:rtl; margin:6px auto; max-width:320px;';
+  msg.textContent = 'הנגן לא הצליח להפעיל את הקובץ בסביבה הזו (שגיאה ' + code + '). נסו לפתוח את הקישור בדפדפן Safari/Chrome.';
+  el.replaceWith(msg);
+  });
+}
+function openVideoFullscreen(src){
+  const wrap = document.getElementById('videoEmbedWrap');
+  const type = videoEmbedType(src);
+  if(type==='youtube'){
+  wrap.innerHTML = `<iframe src="${youtubeEmbedUrl(src)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>`;
+  } else if(type==='drive'){
+  wrap.innerHTML = `<iframe src="${driveEmbedUrl(src)}" allow="autoplay" allowfullscreen frameborder="0"></iframe>`;
+  } else {
+  wrap.innerHTML = `<video controls playsinline autoplay src="${mediaUrl(src)}"></video>`;
+  attachMediaFallback(wrap.querySelector('video'), src);
+  }
+  document.getElementById('videoBackdrop').classList.add('open');
+}
+function closeVideoFullscreen(){
+  document.getElementById('videoEmbedWrap').innerHTML = '';
+  document.getElementById('videoBackdrop').classList.remove('open');
+}
+document.getElementById('videoCloseBtn').onclick = closeVideoFullscreen;
+document.getElementById('videoBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id==='videoBackdrop') closeVideoFullscreen();
+});
+const GLOBE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4.2 5.8 4.2 9s-1.4 6.4-4.2 9c-2.8-2.6-4.2-5.8-4.2-9s1.4-6.4 4.2-9z"/></svg>`;
+const TICKET_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 002 2 2 2 0 010 4 2 2 0 002 2h10a2 2 0 002-2 2 2 0 010-4 2 2 0 00-2-2z"/><path d="M9.5 7.5v9" stroke-dasharray="1.8 2.2"/></svg>`;
+
+function openPlaceSheet(placeId, shopId){
+  const p = PLACES[placeId];
+  const shopData = shopId ? SHOPPING_LISTS[shopId] : null;
+  document.getElementById('sheetContent').innerHTML = `
+  <div class="sheet-hero" id="placeGallery">
+  <div class="hero-loading">טוענות תמונות…</div>
+  </div>
+  <button class="sheet-close" id="sheetCloseBtn">✕</button>
+  <div class="sheet-header-plain">
+  <span class="phtitle">${p.name}</span>
+  <div class="sheet-actions">
+  <a class="gmaps" href="${placeMapsLink(p)}" target="_blank" rel="noopener" title="נווטו">${PIN_SVG}</a>
+  ${p.officialLink?`<a class="official" href="${p.officialLink}" target="_blank" rel="noopener" title="אתר רשמי">${GLOBE_SVG}</a>`:''}
+  ${p.ticketsLink?`<a class="official" href="${p.ticketsLink}" target="_blank" rel="noopener" title="כרטיסים">${TICKET_SVG}</a>`:''}
+  ${p.video?`<button class="video-link-btn" id="sheetVideoBtn" title="צפייה בסרט">${PLAY_SVG}</button>`:''}
+  </div>
+  ${p.established?`<span class="phestablished">${p.established}</span>`:''}
+  </div>
+  <div class="sheet-body">
+  ${shopData?`<button class="shop-toggle-btn" id="shopToggleBtn"><span>${shopData.title}</span></button>${renderShoppingPanel(shopId)}`:''}
+  ${p.kidsStory?`<h4>בגובה העיניים של הילדים</h4><p>${p.kidsStory}</p>`:''}
+  ${p.practical?`<h4>מידע פרקטי</h4><p>${p.practical}</p>`:''}
+  ${p.hours?`<div class="hours-chip">${CLOCK_SVG}<span>${p.hours}</span></div>`:''}
+  ${p.podcastScript?`<h4>פודקאסט קצר</h4>
+  <div class="podcast-box">
+  <button class="podcast-play" id="podcastPlayBtn">${SPEAKER_SVG} השמיעו את הסיפור</button>
+  </div>`:''}
+  <div class="tip">${p.tip}</div>
+  ${p.ticketsInfo?`<div class="tickets">${p.ticketsInfo}</div>`:''}
+  </div>
+  `;
+  document.getElementById('sheetBackdrop').classList.add('open');
+  lockBodyScroll();
+  document.getElementById('sheetCloseBtn').onclick = closePlaceSheet;
+  if(p.podcastScript){
+  document.getElementById('podcastPlayBtn').onclick = (e)=> togglePodcast(p.podcastScript, e.currentTarget);
+  }
+  if(p.video){
+  const vb = document.getElementById('sheetVideoBtn');
+  if(vb) vb.onclick = ()=> openVideoFullscreen(p.video);
+  }
+  if(shopData){
+  const stb = document.getElementById('shopToggleBtn');
+  const panel = document.getElementById('shop-'+shopId);
+  if(stb && panel){
+  stb.onclick = ()=> panel.classList.toggle('open');
+  }
+  document.querySelectorAll('#shop-'+shopId+' .shl-item input[type=checkbox]').forEach(cb=>{
+  cb.onchange = ()=>{
+  const listId = cb.dataset.list;
+  let checked = JSON.parse(localStorage_safe_get('shop-checked-'+listId) || '[]');
+  if(cb.checked){ if(!checked.includes(cb.dataset.key)) checked.push(cb.dataset.key); }
+  else { checked = checked.filter(k=> k!==cb.dataset.key); }
+  localStorage_safe_set('shop-checked-'+listId, JSON.stringify(checked));
+  cb.nextElementSibling.classList.toggle('done', cb.checked);
+  };
+  });
+  }
+  loadPlaceGallery(p);
+}
+
+function openEventSheet(dayId, idx){
+  const day = TRIP.days.find(d=>d.id===dayId);
+  const e = day.events[idx];
+  const link = e.mapsQuery ? (e.mapsLink || mapsUrl(e.mapsQuery)) : null;
+  document.getElementById('sheetContent').innerHTML = `
+  <button class="sheet-close" id="sheetCloseBtn">✕</button>
+  <div class="sheet-header-plain">
+  <span class="phtitle">${e.time} · ${day.weekday} ${day.date.split('/')[0]}/${day.date.split('/')[1]}</span>
+  <div class="sheet-actions">
+  ${link?`<a class="gmaps" href="${link}" target="_blank" rel="noopener" title="נווטו">${PIN_SVG}</a>`:''}
+  ${e.video?`<button class="video-link-btn" id="eventVideoBtn" title="צפייה בסרט">${PLAY_SVG}</button>`:''}
+  </div>
+  </div>
+  <div class="sheet-body">
+  <p style="font-size:.9rem; line-height:1.7;">${e.txt}</p>
+  ${e.note?`<div class="tip">${e.note}</div>`:''}
+  ${e.detail?`<div class="tip">${e.detail}</div>`:''}
+  </div>
+  `;
+  document.getElementById('sheetBackdrop').classList.add('open');
+  lockBodyScroll();
+  document.getElementById('sheetCloseBtn').onclick = closePlaceSheet;
+  if(e.video){
+  const vb = document.getElementById('eventVideoBtn');
+  if(vb) vb.onclick = ()=> openVideoFullscreen(e.video);
+  }
+}
+
+let heroAutoTimer = null;
+
+function stopHeroAuto(){
+  if(heroAutoTimer){ clearInterval(heroAutoTimer); heroAutoTimer = null; }
+}
+
+function setupHeroCarousel(imgs){
+  const hero = document.getElementById('placeGallery');
+  if(!hero) return;
+  hero.innerHTML = `
+  <div class="hero-track" id="heroTrack">${imgs.map((src,i)=>`<img src="${src}" data-i="${i}" loading="lazy" alt="" class="${i===0?'active':''}">`).join('')}</div>
+  ${imgs.length>1?`<div class="hero-dots" id="heroDots">${imgs.map((_,i)=>`<span class="hero-dot ${i===0?'active':''}" data-i="${i}"></span>`).join('')}</div>`:''}
+  `;
+  const track = document.getElementById('heroTrack');
+  const imgEls = track.querySelectorAll('img');
+  const dots = hero.querySelectorAll('.hero-dot');
+  let current = 0;
+
+  function goTo(i){
+  current = (i+imgs.length)%imgs.length;
+  imgEls.forEach((im,idx)=> im.classList.toggle('active', idx===current));
+  dots.forEach((d,idx)=> d.classList.toggle('active', idx===current));
+  }
+  dots.forEach(d=>{
+  d.onclick = ()=>{ goTo(parseInt(d.dataset.i)); resetHeroAuto(imgs.length); };
+  });
+  // basic swipe support
+  let touchStartX = null;
+  track.addEventListener('touchstart', (e)=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend', (e)=>{
+  if(touchStartX===null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if(Math.abs(dx) > 40){ dx > 0 ? goTo(current-1) : goTo(current+1); resetHeroAuto(imgs.length); }
+  touchStartX = null;
+  }, {passive:true});
+
+  function resetHeroAuto(len){
+  stopHeroAuto();
+  if(len>1){ heroAutoTimer = setInterval(()=> goTo(current+1), 3500); }
+  }
+  resetHeroAuto(imgs.length);
+}
+
+function heroFallback(place){
+  const el = document.getElementById('placeGallery');
+  if(!el) return;
+  el.innerHTML = `
+  <div class="hero-loading hero-fallback">
+  <div class="hf-emoji">${place.emoji}</div>
+  <div class="hf-msg">${place.name}</div>
+  </div>
+  `;
+}
+
+function loadPlaceGallery(place){
+  const el = document.getElementById('placeGallery');
+  if(!el) return;
+  if(place.gallery && place.gallery.length){
+  setupHeroCarousel(place.gallery);
+  } else {
+  heroFallback(place);
+  }
+}
+
+/* ===== lightbox (tap to enlarge) ===== */
+let lightboxImgs = [];
+let lightboxIndex = 0;
+function openLightbox(imgs, index){
+  lightboxImgs = imgs;
+  lightboxIndex = index;
+  document.getElementById('lightboxImg').src = imgs[index];
+  document.getElementById('lightboxBackdrop').classList.add('open');
+}
+function lightboxGo(delta){
+  lightboxIndex = (lightboxIndex + delta + lightboxImgs.length) % lightboxImgs.length;
+  document.getElementById('lightboxImg').src = lightboxImgs[lightboxIndex];
+}
+function closeLightbox(){
+  document.getElementById('lightboxBackdrop').classList.remove('open');
+}
+document.getElementById('lightboxCloseBtn').onclick = closeLightbox;
+document.getElementById('lightboxPrev').onclick = ()=> lightboxGo(-1);
+document.getElementById('lightboxNext').onclick = ()=> lightboxGo(1);
+document.getElementById('lightboxBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id==='lightboxBackdrop') closeLightbox();
+});
+
+let __scrollLockY = 0;
+function lockBodyScroll(){
+  __scrollLockY = window.scrollY || window.pageYOffset || 0;
+  document.body.style.position = 'fixed';
+  document.body.style.top = (-__scrollLockY) + 'px';
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll(){
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  window.scrollTo(0, __scrollLockY);
+}
+
+function closePlaceSheet(){
+  stopHeroAuto();
+  document.getElementById('sheetBackdrop').classList.remove('open');
+  unlockBodyScroll();
+}
+document.getElementById('sheetBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id==='sheetBackdrop') closePlaceSheet();
+});
+
+/* =========================================================
+  ROMANIA TAB
+  ========================================================= */
+const INTRO_PODCAST_URL = "intro-podcast.mp3";
+
+function renderIntroPodcast(){
+  const wrap = document.getElementById('introPodcastWrap');
+  if(!wrap || !INTRO_PODCAST_URL) return;
+  wrap.innerHTML = `
+  <div class="podcast-head">
+  <div class="podcast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13a9 9 0 0 1 18 0"/><path d="M21 13v5a2 2 0 0 1-2 2h-1v-7h3z"/><path d="M3 13v5a2 2 0 0 0 2 2h1v-7H3z"/></svg></div>
+  <div>
+  <div class="podcast-title">הפודקאסט של הטיול</div>
+  <div class="podcast-sub">כמה דקות רקע לפני שיוצאים</div>
+  </div>
+  </div>
+  <div class="pp-player">
+  <button class="pp-play" id="ppPlayBtn">${PLAY_SVG}</button>
+  <div class="pp-track" id="ppTrack"><div class="pp-progress" id="ppProgress"></div></div>
+  <div class="pp-time" id="ppTime">0:00</div>
+  </div>
+  <audio id="introPodcastAudio" preload="metadata" src="${mediaUrl(INTRO_PODCAST_URL)}" style="display:none;"></audio>
+  `;
+  const audio = wrap.querySelector('#introPodcastAudio');
+  attachMediaFallback(audio, INTRO_PODCAST_URL);
+
+  const playBtn = wrap.querySelector('#ppPlayBtn');
+  const track = wrap.querySelector('#ppTrack');
+  const progress = wrap.querySelector('#ppProgress');
+  const timeEl = wrap.querySelector('#ppTime');
+  const PAUSE_SVG_ICON = `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`;
+
+  function fmt(sec){
+  if(!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec/60), s = Math.floor(sec%60);
+  return m + ':' + String(s).padStart(2,'0');
+  }
+  playBtn.onclick = ()=>{
+  if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
+  };
+  audio.addEventListener('play', ()=>{ playBtn.innerHTML = PAUSE_SVG_ICON; });
+  audio.addEventListener('pause', ()=>{ playBtn.innerHTML = PLAY_SVG; });
+  audio.addEventListener('timeupdate', ()=>{
+  const pct = audio.duration ? (audio.currentTime/audio.duration)*100 : 0;
+  progress.style.width = pct + '%';
+  timeEl.textContent = fmt(audio.currentTime);
+  });
+  audio.addEventListener('loadedmetadata', ()=>{ timeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('ended', ()=>{ playBtn.innerHTML = PLAY_SVG; progress.style.width='0%'; });
+  track.addEventListener('click', (e)=>{
+  const rect = track.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  if(audio.duration) audio.currentTime = ratio * audio.duration;
+  });
+}
+
+const WEATHER_SPOTS = [
+  {name:"בוקרשט", lat:44.4268, lon:26.1025},
+  {name:"סיביו", lat:45.7983, lon:24.1256},
+  {name:"בראן", lat:45.5149, lon:25.3672}
+];
+function wmoToText(code){
+  if(code===0) return "בהיר";
+  if([1,2].includes(code)) return "מעונן חלקית";
+  if(code===3) return "מעונן";
+  if([45,48].includes(code)) return "ערפל";
+  if([51,53,55,56,57].includes(code)) return "טפטוף";
+  if([61,63,65,66,67,80,81,82].includes(code)) return "גשם";
+  if([71,73,75,77,85,86].includes(code)) return "שלג";
+  if([95,96,99].includes(code)) return "סופת רעמים";
+  return "—";
+}
+async function loadWeather(){
+  const wrap = document.getElementById('weatherWrap');
+  if(!wrap) return;
+  try{
+  const results = await Promise.all(WEATHER_SPOTS.map(async spot=>{
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${spot.lat}&longitude=${spot.lon}&current=temperature_2m,weather_code&timezone=auto`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('weather fetch failed');
+  const data = await res.json();
+  return {name:spot.name, temp:Math.round(data.current.temperature_2m), text:wmoToText(data.current.weather_code)};
+  }));
+  wrap.innerHTML = `<div class="weather-row">${results.map(r=>`
+  <div class="weather-spot">
+  <div class="ws-name">${r.name}</div>
+  <div class="ws-temp">${r.temp}°</div>
+  <div class="ws-text">${r.text}</div>
+  </div>
+  `).join('')}</div>
+  <div class="weather-note">מתעדכן בזמן אמת בכל טעינה של העמוד</div>`;
+  }catch(e){
+  wrap.innerHTML = `<div class="weather-note">לא הצלחנו לטעון תחזית כרגע — בדקו חיבור לאינטרנט ורעננו את העמוד.</div>`;
+  }
+}
+
+function renderCulture(){
+  document.getElementById('cultureWrap').innerHTML = `
+  <p>${TRIP.culture.intro}</p>
+  <h4>עובדות מטורפות (בשבילכם, הילדים!)</h4>
+  ${TRIP.culture.crazyFacts.map(f=>`
+  <div class="fact-card">
+  <div class="fe">${f.emoji}</div>
+  <div class="ft"><b>${f.title}</b><span>${f.text}</span></div>
+  </div>
+  `).join('')}
+  <h4>מנהגים כדאי לדעת</h4>
+  <ul>${TRIP.culture.customs.map(c=>`<li>${c}</li>`).join('')}</ul>
+  <h4>מטבע — ${TRIP.culture.currency.name}</h4>
+  <p>${TRIP.culture.currency.tips}</p>
+  `;
+}
+
+let voicesCache = [];
+let podcastKeepAlive = null;
+function refreshVoices(){ try{ voicesCache = window.speechSynthesis.getVoices() || []; }catch(e){} }
+refreshVoices();
+try{ if('onvoiceschanged' in window.speechSynthesis) window.speechSynthesis.onvoiceschanged = refreshVoices; }catch(e){}
+
+function getBestVoice(langPrefix){
+  const matches = voicesCache.filter(v=>v.lang && v.lang.toLowerCase().startsWith(langPrefix));
+  if(!matches.length) return null;
+  const preferred = matches.find(v=>/google|natural|premium|enhanced|neural|wavenet/i.test(v.name));
+  return preferred || matches[0];
+}
+
+function speakRomanian(text){
+  try{
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ro-RO';
+  const v = getBestVoice('ro');
+  if(v) u.voice = v;
+  u.rate = 0.85;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+  }catch(e){ console.error('speech error', e); }
+}
+
+function togglePodcast(text, btn){
+  try{
+  if(window.speechSynthesis.speaking || window.speechSynthesis.pending){
+  window.speechSynthesis.cancel();
+  if(podcastKeepAlive){ clearInterval(podcastKeepAlive); podcastKeepAlive=null; }
+  btn.innerHTML = `${SPEAKER_SVG} השמיעו את הסיפור`;
+  btn.classList.remove('playing');
+  return;
+  }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'he-IL';
+  const v = getBestVoice('he');
+  if(v) u.voice = v;
+  u.rate = 0.95;
+  const stopUI = ()=>{
+  btn.innerHTML = `${SPEAKER_SVG} השמיעו את הסיפור`;
+  btn.classList.remove('playing');
+  if(podcastKeepAlive){ clearInterval(podcastKeepAlive); podcastKeepAlive=null; }
+  };
+  u.onend = stopUI;
+  u.onerror = stopUI;
+  window.speechSynthesis.speak(u);
+  btn.innerHTML = `${SPEAKER_SVG} עוצרים`;
+  btn.classList.add('playing');
+  // workaround for a mobile/Chrome bug that silently cuts long speech after ~15s
+  if(podcastKeepAlive) clearInterval(podcastKeepAlive);
+  podcastKeepAlive = setInterval(()=>{
+  if(!window.speechSynthesis.speaking){ clearInterval(podcastKeepAlive); podcastKeepAlive=null; return; }
+  window.speechSynthesis.pause();
+  window.speechSynthesis.resume();
+  }, 9000);
+  }catch(e){ console.error('podcast speech error', e); }
+}
+
+const SPEAKER_SVG = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M19 6a8.5 8.5 0 010 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.6"/></svg>`;
+
+function renderPhrases(){
+  document.getElementById('phrasesWrap').innerHTML = TRIP.phrases.map((ph,i)=>`
+  <div class="phrase-row">
+  <button class="say-btn" data-i="${i}" title="השמעת הגייה">${SPEAKER_SVG}</button>
+  <div class="txt">
+  <span class="he-word">${ph.he}</span>
+  <span class="ro-line"><b>${ph.ro}</b> · ${ph.ph}</span>
+  </div>
+  </div>
+  `).join('');
+  document.querySelectorAll('.say-btn').forEach(btn=>{
+  btn.onclick = ()=>{
+  speakRomanian(TRIP.phrases[btn.dataset.i].ro);
+  btn.classList.add('playing');
+  setTimeout(()=> btn.classList.remove('playing'), 900);
+  };
+  });
+}
+
+/* =========================================================
+  GAMES — quiz playable with zero login, shuffled answers, speed bonus
+  ========================================================= */
+let questionShownAt = 0;
+
+function renderQuiz(){
+  const unanswered = quizOrder.filter(q=>!myProgress.has(q.id));
+  const wrap = document.getElementById('quizWrap');
+  if(unanswered.length===0){
+  wrap.innerHTML = `<div class="empty">עניתם נכון על כל השאלות שיש כרגע! כל הכבוד!</div>`;
+  return;
+  }
+  const q = unanswered[0];
+  const optsShuffled = shuffle(q.options.map((opt,i)=>({opt, isCorrect:i===q.correct})));
+  wrap.innerHTML = `
+  <div class="quiz-progress">שאלה ${QUIZ_BANK.length-unanswered.length+1} מתוך ${QUIZ_BANK.length} · תשובה מהירה = יותר נקודות! </div>
+  <p style="font-size:.72rem; color:var(--muted); margin-top:0;">${q.emoji} ${q.name}</p>
+  <div class="quiz-q">${q.q}</div>
+  ${optsShuffled.map((o,i)=>`<button class="quiz-opt" data-correct="${o.isCorrect}" data-id="${q.id}">${o.opt}</button>`).join('')}
+  <div id="quizFeedback"></div>
+  `;
+  wrap.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.onclick = ()=> answerQuiz(btn);
+  });
+  questionShownAt = Date.now();
+}
+
+function answerQuiz(btn){
+  const id = btn.dataset.id;
+  const isCorrect = btn.dataset.correct === 'true';
+  const elapsedSec = (Date.now()-questionShownAt)/1000;
+  const opts = document.querySelectorAll(`.quiz-opt[data-id="${id}"]`);
+  opts.forEach(o=>o.disabled=true);
+  if(isCorrect){
+  btn.classList.add('correct');
+  myProgress.add(id);
+  const speedBonus = elapsedSec<=5 ? 5 : elapsedSec<=10 ? 2 : 0;
+  const total = 10 + speedBonus;
+  document.getElementById('quizFeedback').innerHTML = `<div class="quiz-feedback">נכון! +${total} נקודות${speedBonus?` (כולל בונוס מהירות +${speedBonus})`:''}</div>`;
+  if(myTeam) addTeamPoints(total);
+  setTimeout(renderQuiz, 1300);
+  } else {
+  btn.classList.add('wrong');
+  opts.forEach(o=>{ if(o.dataset.correct==='true') o.classList.add('correct'); });
+  document.getElementById('quizFeedback').innerHTML = `<div class="quiz-feedback">לא בדיוק — התשובה הנכונה מסומנת בירוק.</div>`;
+  setTimeout(renderQuiz, 1700);
+  }
+}
+
+/* =========================================================
+  OPTIONAL LEADERBOARD — "מי מכיר הכי טוב את רומניה"
+  ========================================================= */
+const RANK_TITLES = ["שליט/ת הקרפטים ","אביר/ה של בראן ","חוקר/ת טרנסילבניה ","גיבור/ת הפורל "];
+function rankTitle(i){ return RANK_TITLES[i] || "מטייל/ת רומניה "; }
+
+function localStorage_safe_get(k){ try{ return localStorage.getItem(k); }catch(e){ return window.__mem?.[k] || null; } }
+function localStorage_safe_set(k,v){ try{ localStorage.setItem(k,v); }catch(e){ window.__mem = window.__mem||{}; window.__mem[k]=v; } }
+
+/* =========================================================
+  DAILY CHALLENGE (Today tab)
+  ========================================================= */
+function renderDailyChallenge(){
+  const wrap = document.getElementById('dailyChallengeWrap');
+  const challenge = DAILY_CHALLENGES[selectedDay];
+  if(!challenge){ wrap.innerHTML=''; wrap.className='card daily-challenge-card'; return; }
+  const doneKey = 'daily-done-'+selectedDay;
+  const startedKey = 'daily-started-'+selectedDay;
+  const isDone = localStorage_safe_get(doneKey) === '1';
+  const hasAction = !!challenge.actionScreen;
+  const isUnlocked = !hasAction || isDone || localStorage_safe_get(startedKey) === '1';
+  wrap.className = 'card daily-challenge-card' + (isDone?' done':'');
+  wrap.innerHTML = `
+  <div class="dce">${challenge.emoji}</div>
+  <div class="dct"><b>אתגר היום</b>${challenge.text}</div>
+  <div class="dcbtns">
+  ${hasAction && !isDone ? `<button id="dailyActionBtn">${challenge.actionLabel||'לביצוע'}</button>` : ''}
+  <button id="dailyDoneBtn" ${isUnlocked?'':'disabled title="קודם בצעו את המשימה"'}>${isDone?' הושלם':'סימנו כהושלם'}</button>
+  </div>
+  `;
+  if(hasAction && !isDone){
+  document.getElementById('dailyActionBtn').onclick = ()=>{
+  localStorage_safe_set(startedKey,'1');
+  switchToScreen(challenge.actionScreen);
+  if(challenge.actionAnchor){
+  setTimeout(()=>{
+  const target = document.getElementById(challenge.actionAnchor);
+  if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 60);
+  }
+  renderDailyChallenge();
+  };
+  }
+  document.getElementById('dailyDoneBtn').onclick = ()=>{
+  if(isDone || !isUnlocked) return;
+  localStorage_safe_set(doneKey,'1');
+  if(myTeam) addTeamPoints(20);
+  renderDailyChallenge();
+  };
+}
+
+/* =========================================================
+  SCAVENGER HUNT
+  ========================================================= */
+function renderScavengerHunt(){
+  const wrap = document.getElementById('scavengerWrap');
+  wrap.innerHTML = SCAVENGER_ITEMS.map(it=>{
+  const found = localStorage_safe_get('scav-'+it.id) === '1';
+  return `
+  <div class="scav-item ${found?'found':''}">
+  <div class="se">${it.emoji}</div>
+  <div class="st">${it.text}</div>
+  <button data-id="${it.id}" ${found?'disabled':''}>${found?'נמצא!':'מצאנו!'}</button>
+  </div>`;
+  }).join('');
+  wrap.querySelectorAll('button[data-id]').forEach(btn=>{
+  btn.onclick = ()=>{
+  const id = btn.dataset.id;
+  if(localStorage_safe_get('scav-'+id)==='1') return;
+  localStorage_safe_set('scav-'+id,'1');
+  if(myTeam) addTeamPoints(15);
+  renderScavengerHunt();
+  };
+  });
+}
+
+/* =========================================================
+  PRICE GUESSING GAME
+  ========================================================= */
+function renderPriceGame(){
+  const wrap = document.getElementById('priceGameWrap');
+  wrap.innerHTML = PRICE_ITEMS.map(pg=>{
+  const answered = localStorage_safe_get('price-'+pg.id);
+  return `
+  <div class="price-q">
+  <div class="pi">${pg.emoji} ${pg.item}</div>
+  <div class="popts">
+  ${pg.options.map((opt,i)=>{
+  let cls='price-opt';
+  if(answered!==null){
+  if(i===pg.correct) cls+=' correct';
+  else if(String(i)===answered) cls+=' wrong';
+  }
+  return `<span class="${cls}" data-i="${i}" data-id="${pg.id}">${opt}</span>`;
+  }).join('')}
+  </div>
+  </div>`;
+  }).join('');
+  wrap.querySelectorAll('.price-opt').forEach(el=>{
+  el.onclick = ()=>{
+  const id = el.dataset.id;
+  if(localStorage_safe_get('price-'+id)!==null) return;
+  const i = el.dataset.i;
+  localStorage_safe_set('price-'+id, i);
+  const item = PRICE_ITEMS.find(p=>p.id===id);
+  if(parseInt(i)===item.correct && myTeam) addTeamPoints(10);
+  renderPriceGame();
+  };
+  });
+}
+
+/* =========================================================
+  TRIP BINGO
+  ========================================================= */
+function renderBingo(){
+  const wrap = document.getElementById('bingoWrap');
+  const marked = JSON.parse(localStorage_safe_get('bingo-marked') || '[]');
+  const complete = localStorage_safe_get('bingo-complete')==='1';
+  wrap.innerHTML = `
+  <div class="bingo-grid">
+  ${BINGO_ITEMS.map(b=>`
+  <div class="bingo-cell ${marked.includes(b.id)?'marked':''}" data-id="${b.id}">
+  <div class="be">${b.emoji}</div>
+  <div class="bt">${b.text}</div>
+  </div>
+  `).join('')}
+  </div>
+  ${complete?'<div class="bingo-complete-msg">ביצעתם בינגו מלא! בונוס הוענק.</div>':''}
+  `;
+  wrap.querySelectorAll('.bingo-cell').forEach(cell=>{
+  cell.onclick = ()=>{
+  let m = JSON.parse(localStorage_safe_get('bingo-marked') || '[]');
+  const id = cell.dataset.id;
+  if(m.includes(id)) m = m.filter(x=>x!==id);
+  else m.push(id);
+  localStorage_safe_set('bingo-marked', JSON.stringify(m));
+  if(m.length===BINGO_ITEMS.length && localStorage_safe_get('bingo-complete')!=='1'){
+  localStorage_safe_set('bingo-complete','1');
+  if(myTeam) addTeamPoints(30);
+  }
+  renderBingo();
+  };
+  });
+}
+
+/* =========================================================
+  PERSONAL EXPENSE LOG
+  ========================================================= */
+const CURRENCY_LABELS = {RON:"לאו", EUR:"יורו", ILS:"₪", USD:"$"};
+
+const DEFAULT_EXPENSES = [
+  {id:"seed1", date:"2026-08-15", item:"Arboreal Retreat", category:"לינה", amount:"2317.61", currency:"ILS"},
+  {id:"seed2", date:"2026-08-17", item:"The Lodge Transylvania", category:"לינה", amount:"1476.53", currency:"USD"},
+  {id:"seed3", date:"2026-08-20", item:"Hotel Cismigiu", category:"לינה", amount:"363", currency:"EUR"},
+  {id:"seed4", date:"2026-08-07", item:"רכב מיניוואן", category:"תחבורה", amount:"3719", currency:"ILS"},
+  {id:"seed5", date:"2026-08-07", item:"רכב 5 מקומות", category:"תחבורה", amount:"3195", currency:"ILS"},
+  {id:"seed6", date:"2026-08-07", item:"טיסות", category:"תחבורה", amount:"9849", currency:"ILS"}
+];
+
+let expenseEditMode = false;
+
+function getExpenses(){
+  try{ return JSON.parse(localStorage_safe_get('expenses') || '[]'); }
+  catch(e){ return []; }
+}
+function ensureExpensesSeeded(){
+  if(localStorage_safe_get('expenses-seeded') !== '1'){
+  localStorage_safe_set('expenses-seeded', '1');
+  saveExpenses(DEFAULT_EXPENSES.slice());
+  }
+}
+function saveExpensesLocal(list){
+  localStorage_safe_set('expenses', JSON.stringify(list));
+}
+function saveExpenses(list){
+  saveExpensesLocal(list);
+  if(window.__fbPushExpenses) window.__fbPushExpenses(list);
+}
+
+function mergeExpensesList(base, incoming){
+  const ids = new Set(base.map(e=>e.id));
+  const merged = base.slice();
+  let added = 0;
+  incoming.forEach(e=>{
+  if(e && e.id && !ids.has(e.id)){
+  merged.push(e);
+  ids.add(e.id);
+  added++;
+  }
+  });
+  return {merged, added};
+}
+function mergeExpenses(importedList){
+  const {merged, added} = mergeExpensesList(getExpenses(), importedList);
+  saveExpenses(merged);
+  return added;
+}
+
+const EXCHANGE_TO_ILS = {ILS:1, RON:0.67, EUR:3.51, USD:3.05};
+function toILS(amount, currency){
+  return (Number(amount)||0) * (EXCHANGE_TO_ILS[currency] || 1);
+}
+
+function formatExpenseDate(dateStr){
+  if(!dateStr) return "ללא תאריך";
+  const parts = dateStr.split('-');
+  if(parts.length!==3) return dateStr;
+  const [y,m,d] = parts;
+  const dayObj = TRIP.days.find(dd=> dd.date === `${parseInt(d)}/${parseInt(m)}/${y}`);
+  return dayObj ? `${dayObj.weekday}, ${parseInt(d)}/${parseInt(m)}/${y}` : `${parseInt(d)}/${parseInt(m)}/${y}`;
+}
+
+function renderExpenses(){
+  const list = getExpenses().slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+
+  const totalILS = list.reduce((sum,e)=> sum + toILS(e.amount, e.currency), 0);
+  const summaryEl = document.getElementById('expenseSummary');
+  summaryEl.innerHTML = list.length===0
+  ? `<div class="empty">עדיין אין הוצאות רשומות</div>`
+  : `<div class="exp-total-main">${totalILS.toLocaleString(undefined,{maximumFractionDigits:0})} ₪</div>
+  <div class="exp-total-sub">סה"כ הוצאות</div>`;
+
+  const editBtn = document.getElementById('expEditToggle');
+  if(editBtn){
+  editBtn.innerHTML = PENCIL_SVG;
+  editBtn.classList.toggle('active', expenseEditMode);
+  }
+
+  const listEl = document.getElementById('expenseList');
+  let html = '';
+  let lastDate = undefined;
+  list.forEach(e=>{
+  if(e.date !== lastDate){
+  lastDate = e.date;
+  const dayTotal = list.filter(x=> x.date===e.date).reduce((s,x)=> s + toILS(x.amount, x.currency), 0);
+  html += `<div class="exp-date-sep"><span>${formatExpenseDate(e.date)}</span><span class="exp-date-total">${dayTotal.toLocaleString(undefined,{maximumFractionDigits:0})} ₪</span></div>`;
+  }
+  const ils = toILS(e.amount, e.currency);
+  const showOriginal = e.currency !== 'ILS';
+  html += `
+  <div class="card exp-row-wrap">
+  <div class="exp-row">
+  <div class="exp-row-main">
+  <div class="exp-item">${e.item ? e.item : '(ללא תיאור)'}</div>
+  <div class="exp-meta">${e.category}</div>
+  </div>
+  <div class="exp-amount-wrap">
+  <div class="exp-amount">${ils.toLocaleString(undefined,{maximumFractionDigits:0})} ₪</div>
+  ${showOriginal ? `<button class="exp-orig-toggle" data-id="${e.id}" title="הצג סכום מקורי">${INFO_SVG}</button>` : ''}
+  </div>
+  ${expenseEditMode ? `<button class="exp-delete" data-id="${e.id}" title="מחיקה">✕</button>` : ''}
+  </div>
+  ${showOriginal ? `<div class="exp-orig-detail" id="orig-${e.id}">סכום מקורי: ${Number(e.amount).toLocaleString()} ${CURRENCY_LABELS[e.currency]||e.currency}</div>` : ''}
+  </div>
+  `;
+  });
+  listEl.innerHTML = html;
+
+  listEl.querySelectorAll('.exp-delete').forEach(btn=>{
+  btn.onclick = ()=>{
+  saveExpenses(getExpenses().filter(e=> e.id!==btn.dataset.id));
+  renderExpenses();
+  };
+  });
+  listEl.querySelectorAll('.exp-orig-toggle').forEach(btn=>{
+  btn.onclick = ()=>{
+  const el = document.getElementById('orig-'+btn.dataset.id);
+  if(el) el.classList.toggle('open');
+  };
+  });
+}
+
+function initExpenseForm(){
+  const dateInput = document.getElementById('expDate');
+  if(!dateInput.value) dateInput.value = new Date().toISOString().slice(0,10);
+  const addForm = document.getElementById('expAddForm');
+  const addToggleBtn = document.getElementById('expAddToggleBtn');
+  addToggleBtn.onclick = ()=>{
+  const isOpen = addForm.classList.toggle('open');
+  addToggleBtn.textContent = isOpen ? ' סגירה' : ' הוספת הוצאה';
+  };
+  const convInput = document.getElementById('currConvInput');
+  const convResult = document.getElementById('currConvResult');
+  convInput.oninput = ()=>{
+  const ron = Number(convInput.value) || 0;
+  const ils = ron * (EXCHANGE_TO_ILS.RON || 0.67);
+  convResult.textContent = ils.toLocaleString(undefined,{maximumFractionDigits:1}) + ' ₪';
+  };
+  document.getElementById('addExpenseBtn').onclick = ()=>{
+  const amountVal = document.getElementById('expAmount').value;
+  if(!amountVal || isNaN(Number(amountVal))) return;
+  const entry = {
+  id: Date.now().toString(),
+  date: dateInput.value || new Date().toISOString().slice(0,10),
+  item: document.getElementById('expItem').value.trim(),
+  category: document.getElementById('expCategory').value,
+  amount: amountVal,
+  currency: document.getElementById('expCurrency').value
+  };
+  const list = getExpenses();
+  list.push(entry);
+  saveExpenses(list);
+  document.getElementById('expItem').value = '';
+  document.getElementById('expAmount').value = '';
+  addForm.classList.remove('open');
+  addToggleBtn.textContent = ' הוספת הוצאה';
+  renderExpenses();
+  };
+  document.getElementById('expEditToggle').onclick = ()=>{
+  expenseEditMode = !expenseEditMode;
+  renderExpenses();
+  };
+  updateSyncStatus('offline');
+}
+
+function updateSyncStatus(state){
+  const el = document.getElementById('expSyncStatus');
+  if(!el) return;
+  el.classList.remove('synced','offline');
+  if(state==='synced'){
+  el.classList.add('synced');
+  el.innerHTML = `<span class="dot"></span><span>מסונכרן אוטומטית בין כל המכשירים</span>`;
+  } else if(state==='syncing'){
+  el.innerHTML = `<span class="dot"></span><span>מתחבר לסנכרון…</span>`;
+  } else {
+  el.classList.add('offline');
+  el.innerHTML = `<span class="dot"></span><span>שמור במכשיר הזה בלבד כרגע</span>`;
+  }
+}
+
+async function renderBoard(){
+  myTeam = localStorage_safe_get('myTeamName') || null;
+  const card = document.getElementById('myTeamCard');
+  if(!myTeam){
+  card.innerHTML = `
+  <p style="font-size:.85rem; margin-top:0;">רוצים להצטרף לתחרות "מי מכיר הכי טוב את רומניה"? בחרו שם (שלכם או של הקבוצה):</p>
+  <input class="field" id="teamNameInput" placeholder="השם שלכם בתחרות">
+  <button class="btn-primary" id="joinBtn">הצטרפו ללוח</button>
+  `;
+  document.getElementById('joinBtn').onclick = async ()=>{
+  const val = document.getElementById('teamNameInput').value.trim();
+  if(!val) return;
+  myTeam = val;
+  localStorage_safe_set('myTeamName', val);
+  await ensureTeamScore(val);
+  renderBoard();
+  };
+  } else {
+  card.innerHTML = `
+  <p style="font-size:.85rem; margin:0;">אתם משחקים בתור <b>${myTeam}</b> </p>
+  <button class="btn-secondary" id="switchTeamBtn" style="margin-top:8px;">להחליף שם</button>
+  `;
+  document.getElementById('switchTeamBtn').onclick = ()=>{
+  localStorage_safe_set('myTeamName','');
+  myTeam=null; renderBoard();
+  };
+  }
+  await renderLeaderboardList();
+}
+
+async function ensureTeamScore(team){
+  try{ await window.storage.get('team-score:'+team, true); }
+  catch(e){ try{ await window.storage.set('team-score:'+team, '0', true); }catch(e2){} }
+}
+
+async function addTeamPoints(n){
+  if(!myTeam) return;
+  try{
+  let current = 0;
+  try{
+  const r = await window.storage.get('team-score:'+myTeam, true);
+  current = r ? parseInt(r.value)||0 : 0;
+  }catch(e){}
+  await window.storage.set('team-score:'+myTeam, String(current+n), true);
+  renderLeaderboardList();
+  }catch(e){ console.error('storage error', e); }
+}
+
+async function renderLeaderboardList(){
+  const wrap = document.getElementById('leaderboardWrap');
+  try{
+  const list = await window.storage.list('team-score:', true);
+  if(!list || !list.keys || list.keys.length===0){
+  wrap.innerHTML = `<div class="empty">עדיין אין משתתפים בלוח.</div>`;
+  return;
+  }
+  const rows = [];
+  for(const key of list.keys){
+  const r = await window.storage.get(key, true);
+  rows.push({ name: key.replace('team-score:',''), score: r? (parseInt(r.value)||0) : 0 });
+  }
+  rows.sort((a,b)=>b.score-a.score);
+  wrap.innerHTML = rows.map((r,i)=>`
+  <div class="team-row">
+  <div class="rank">${i+1}</div>
+  <div class="name">${r.name}${myTeam===r.name?' (אתם)':''}<span class="ranktitle">${rankTitle(i)}</span></div>
+  <div class="score">${r.score} </div>
+  </div>
+  `).join('');
+  }catch(e){
+  wrap.innerHTML = `<div class="empty">לא הצלחנו לטעון את הלוח כרגע.</div>`;
+  }
+}
+
+/* =========================================================
+  NAV + INIT
+  ========================================================= */
+const GAME_OPTIONS = [
+  {id:"quiz", emoji:"", title:"חידון הדרך", desc:"טריוויה ו\"מי אני\" על רומניה"},
+  {id:"scavenger", emoji:"", title:"ציד המטמון", desc:"8 אתגרי חיפוש וצילום לאורך הטיול"},
+  {id:"price", emoji:"", title:"ניחוש מחירים", desc:"כמה זה עולה ברומניה בערך?"},
+  {id:"bingo", emoji:"", title:"בינגו הטיול", desc:"לוח 3×3 — השלימו וקבלו בונוס"},
+  {id:"board", emoji:"", title:"מי מכיר הכי טוב את רומניה", desc:"לוח דירוג משפחתי משותף"}
+];
+
+function renderGamesMenu(){
+  document.getElementById('gamesMenu').innerHTML = GAME_OPTIONS.map(g=>`
+  <button class="game-tile" data-game="${g.id}">
+  <span class="gt-emoji">${g.emoji}</span>
+  <span class="gt-text"><span class="gt-title">${g.title}</span><span class="gt-desc">${g.desc}</span></span>
+  </button>
+  `).join('');
+  document.querySelectorAll('.game-tile').forEach(t=> t.onclick = ()=> showGamePanel(t.dataset.game));
+}
+function showGamePanel(id){
+  document.getElementById('gamesMenu').style.display = 'none';
+  document.querySelectorAll('.game-panel').forEach(p=> p.classList.toggle('open', p.dataset.game===id));
+}
+function showGamesMenu(){
+  document.getElementById('gamesMenu').style.display = '';
+  document.querySelectorAll('.game-panel').forEach(p=> p.classList.remove('open'));
+}
+document.querySelectorAll('.games-back').forEach(b=> b.onclick = showGamesMenu);
+
+function switchToScreen(screenName){
+  document.querySelectorAll('nav.tabs button').forEach(b=> b.classList.toggle('active', b.dataset.screen===screenName));
+  document.querySelectorAll('.screen').forEach(s=> s.classList.remove('active'));
+  document.getElementById('screen-'+screenName).classList.add('active');
+  if(screenName==='games') showGamesMenu();
+}
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.onclick = ()=> switchToScreen(btn.dataset.screen);
+});
+
+renderToday();
+renderIntroPodcast();
+loadWeather();
+document.querySelectorAll('.route-pin').forEach(btn=>{
+  btn.onclick = ()=> openPlaceSheet(btn.dataset.place);
+});
+(function initInlineMapZoom(){
+  const wrap = document.getElementById('routeMapWrap');
+  const canvas = document.getElementById('routeMapCanvas');
+  if(!wrap || !canvas) return;
+
+  const CW = 600, CH = 440;
+  let scale = 1, tx = 0, ty = 0, baseScale = 1;
+
+  function applyTransform(){
+  canvas.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+  }
+  function clamp(){
+  const vw = wrap.clientWidth, vh = wrap.clientHeight;
+  const contentW = CW*scale, contentH = CH*scale;
+  const minX = Math.min(0, vw - contentW), maxX = Math.max(0, vw - contentW);
+  const minY = Math.min(0, vh - contentH), maxY = Math.max(0, vh - contentH);
+  tx = Math.min(Math.max(tx, minX), maxX);
+  ty = Math.min(Math.max(ty, minY), maxY);
+  }
+  function fitToWrap(){
+  const vw = wrap.clientWidth, vh = wrap.clientHeight;
+  baseScale = Math.max(vw/CW, vh/CH);
+  scale = baseScale;
+  tx = (vw - CW*scale)/2;
+  ty = (vh - CH*scale)/2;
+  applyTransform();
+  }
+  requestAnimationFrame(fitToWrap);
+  window.addEventListener('resize', fitToWrap);
+
+  let touchState = null;
+  let lastTapTime = 0;
+  wrap.addEventListener('touchstart', (e)=>{
+  if(e.touches.length === 1){
+  const now = Date.now();
+  if(now - lastTapTime < 300){ fitToWrap(); touchState = null; lastTapTime = 0; return; }
+  lastTapTime = now;
+  if(scale > baseScale * 1.03){
+  touchState = {mode:'pan', startX:e.touches[0].clientX, startY:e.touches[0].clientY, tx0:tx, ty0:ty};
+  }
+  } else if(e.touches.length === 2){
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  touchState = {mode:'pinch', startDist:Math.hypot(dx,dy), scale0:scale, tx0:tx, ty0:ty};
+  }
+  }, {passive:true});
+  wrap.addEventListener('touchmove', (e)=>{
+  if(!touchState) return;
+  e.preventDefault();
+  if(touchState.mode === 'pan' && e.touches.length === 1){
+  tx = touchState.tx0 + (e.touches[0].clientX - touchState.startX);
+  ty = touchState.ty0 + (e.touches[0].clientY - touchState.startY);
+  clamp();
+  applyTransform();
+  } else if(touchState.mode === 'pinch' && e.touches.length === 2){
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  const dist = Math.hypot(dx,dy);
+  const ratio = dist / touchState.startDist;
+  scale = Math.min(Math.max(touchState.scale0 * ratio, baseScale), baseScale*5);
+  clamp();
+  applyTransform();
+  }
+  }, {passive:false});
+  wrap.addEventListener('touchend', (e)=>{
+  if(e.touches.length === 0) touchState = null;
+  });
+})();
+renderCulture();
+renderPhrases();
+renderQuiz();
+renderScavengerHunt();
+renderPriceGame();
+renderBingo();
+renderBoard();
+ensureExpensesSeeded();
+initExpenseForm();
+renderExpenses();
+renderGamesMenu();
+</script>
+
+<!-- =========================================================
+     LIVE EXPENSE SYNC (Firebase Firestore)
+     All devices read/write the same shared document, so every
+     phone sees new expenses automatically without any manual
+     copy/paste step. Falls back silently to local-only storage
+     if the network or Firebase is unreachable.
+     ========================================================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, onSnapshot, enableIndexedDbPersistence }
+    from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAODvBMWrgkW-dt2pvxuNbOHOHDSA2ADM4",
+    authDomain: "romania-family-trip-2026.firebaseapp.com",
+    projectId: "romania-family-trip-2026",
+    storageBucket: "romania-family-trip-2026.firebasestorage.app",
+    messagingSenderId: "43316424516",
+    appId: "1:43316424516:web:b56bd7772661d44aa1b111"
+  };
+
+  const DOC_PATH = ['trips', 'romania2026-expenses'];
+  let suppressNextPush = false;
+
+  try{
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    try{ await enableIndexedDbPersistence(db); }catch(e){ /* offline cache unavailable (private mode / multi-tab) - fine, sync still works online */ }
+
+    const ref = doc(db, ...DOC_PATH);
+
+    window.__fbPushExpenses = (list)=>{
+      if(suppressNextPush) return;
+      setDoc(ref, { expenses: list, updatedAt: Date.now() }).catch(()=>{ /* offline - Firestore will retry once back online */ });
+    };
+
+    if(typeof updateSyncStatus === 'function') updateSyncStatus('syncing');
+
+    onSnapshot(ref, (snap)=>{
+      if(typeof updateSyncStatus === 'function') updateSyncStatus('synced');
+      const data = snap.data();
+      if(!data || !Array.isArray(data.expenses)){
+        // doc doesn't exist yet - seed it from whatever this device already has
+        if(typeof getExpenses === 'function') window.__fbPushExpenses(getExpenses());
+        return;
+      }
+      if(typeof getExpenses !== 'function' || typeof saveExpensesLocal !== 'function') return;
+      const remoteList = data.expenses;
+      const remoteIds = new Set(remoteList.map(e=> e && e.id));
+      // entries this device added but hasn't pushed yet (e.g. was offline) ride along;
+      // remote is otherwise authoritative, so a delete on one phone removes it everywhere
+      const localOnly = getExpenses().filter(e=> e && e.id && !remoteIds.has(e.id));
+      const finalList = remoteList.concat(localOnly);
+      suppressNextPush = true;
+      saveExpensesLocal(finalList);
+      suppressNextPush = false;
+      if(localOnly.length > 0) window.__fbPushExpenses(finalList);
+      if(typeof renderExpenses === 'function') renderExpenses();
+    }, (err)=>{
+      console.error('expenses sync error', err);
+      if(typeof updateSyncStatus === 'function') updateSyncStatus('offline');
+    });
+  }catch(e){
+    console.error('firebase init failed', e);
+    if(typeof updateSyncStatus === 'function') updateSyncStatus('offline');
+  }
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
